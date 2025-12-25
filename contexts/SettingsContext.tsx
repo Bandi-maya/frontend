@@ -1,13 +1,14 @@
-"use client"
+"use client";
 
 import { apiFetch } from "@/lib/axios";
 import { countryToCurrency } from "@/lib/constants";
+import { useMobile } from "@/hooks/useMobile";
 import {
   createContext,
   useContext,
   useEffect,
   useState,
-  ReactNode
+  ReactNode,
 } from "react";
 
 type ContactType = {
@@ -25,6 +26,7 @@ type SettingsContextType = {
   isIndia: boolean;
   countryCode: string;
   currencyCode: string;
+  isMobile: boolean;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(
@@ -34,9 +36,10 @@ const SettingsContext = createContext<SettingsContextType | undefined>(
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const [contact, setContact] = useState<ContactType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isIndia, setIsIndia] = useState(false)
-  const [countryCode, setCountryCode] = useState("")
-  const [currencyCode, setCurrencyCode] = useState("")
+  const [isIndia, setIsIndia] = useState(false);
+  const [countryCode, setCountryCode] = useState("");
+  const [currencyCode, setCurrencyCode] = useState("");
+  const isMobile = useMobile();
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -54,24 +57,24 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
     if (cachedLocation) {
       setIsIndia(cachedLocation === "IN");
-      setCountryCode(cachedLocation)
-      setCurrencyCode(countryToCurrency?.[cachedLocation] ?? 'USD')
+      setCountryCode(cachedLocation);
+      setCurrencyCode(countryToCurrency?.[cachedLocation] ?? "USD");
     } else {
       // Only fetch if we don't know the location yet
-      fetch('https://ipapi.co/json/')
-        .then(res => {
+      fetch("https://ipapi.co/json/")
+        .then((res) => {
           if (res.status === 429) throw new Error("Rate limit hit");
           return res.json();
         })
-        .then(data => {
+        .then((data) => {
           const countryCode = data.country_code; // "IN", "US", etc.
           const isInd = countryCode === "IN";
           setIsIndia(isInd);
-          setCountryCode(countryCode)
-          setCurrencyCode(countryToCurrency[countryCode] ?? 'USD')
+          setCountryCode(countryCode);
+          setCurrencyCode(countryToCurrency[countryCode] ?? "USD");
           localStorage.setItem("user-location", countryCode);
         })
-        .catch(err => {
+        .catch((err) => {
           console.warn("Location API unavailable, defaulting to India:", err);
           // Default stays India, or you can show a country selector popup
         });
@@ -80,8 +83,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     fetchSettings();
   }, []);
 
-  console.log(countryCode)
-
+  console.log(countryCode);
 
   return (
     <SettingsContext.Provider
@@ -91,7 +93,8 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         loading,
         isIndia,
         countryCode,
-        currencyCode
+        currencyCode,
+        isMobile,
       }}
     >
       {children}

@@ -9,24 +9,32 @@ import { SettingsProvider } from "@/contexts/SettingsContext";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 
+import { ThemeProvider } from "@/contexts/ThemeContext";
+
+import { LanguageProvider } from "@/contexts/LanguageContext";
+
 const queryClient = new QueryClient();
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <SettingsProvider>
-        <UserProvider>
-          <CategoriesProvider>
-            <ProductsProvider>
-              <CartProvider>
-                <Toaster />
-                <Sonner />
-                {children}
-              </CartProvider>
-            </ProductsProvider>
-          </CategoriesProvider>
-        </UserProvider>
-      </SettingsProvider>
+      <ThemeProvider>
+        <SettingsProvider>
+          <UserProvider>
+            <CategoriesProvider>
+              <ProductsProvider>
+                <CartProvider>
+                  <LanguageProvider>
+                    <Toaster />
+                    <Sonner />
+                    {children}
+                  </LanguageProvider>
+                </CartProvider>
+              </ProductsProvider>
+            </CategoriesProvider>
+          </UserProvider>
+        </SettingsProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

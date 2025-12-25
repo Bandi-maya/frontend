@@ -45,15 +45,15 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
   };
 
   return (
-    <div className={`${depth > 1 ? "ml-8 border-l-2 border-gray-100 pl-4" : ""} space-y-4`}>
+    <div className={`${depth > 1 ? "ml-8 border-l-2 border-[var(--neutral-100)] pl-4" : ""} space-y-4`}>
       {nodes?.length > 0 && (
-        <div className="bg-indigo-50 p-2 rounded-md border border-indigo-100 flex items-center gap-4 mb-2">
-          <label className="text-[10px] font-black text-indigo-500 uppercase tracking-widest whitespace-nowrap">
+        <div className="bg-[var(--primary-50)] p-2 rounded-md border border-[var(--primary-100)] flex items-center gap-4 mb-2">
+          <label className="text-[10px] font-black text-[var(--primary-500)] uppercase tracking-widest whitespace-nowrap">
             Level {depth} Category Name:
           </label>
           <input
             placeholder="e.g. Color, Size, or Fabric"
-            className="flex-1 bg-transparent border-b border-indigo-200 focus:border-indigo-500 outline-none text-sm font-bold text-indigo-700"
+            className="flex-1 bg-transparent border-b border-[var(--primary-200)] focus:border-[var(--primary-500)] outline-none text-sm font-bold text-[var(--primary-700)]"
             value={levelLabels[depth - 1] || ""}
             onChange={(e) => handleLabelChange(e.target.value)}
           />
@@ -64,13 +64,13 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
         const isLeaf = node.children?.length === 0;
 
         return (
-          <div key={node.id} className="bg-white border rounded-xl p-4 shadow-sm">
-            <div className="flex flex-col md:flex-row gap-4 mb-4 bg-gray-50 p-3 rounded-lg">
+          <div key={node.id} className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm">
+            <div className="flex flex-col md:flex-row gap-4 mb-4 bg-[var(--neutral-50)] p-3 rounded-lg">
               <div className="flex-[2]">
-                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{node.levelLabel || `Level ${depth}`} Value</label>
+                <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase tracking-widest">{node.levelLabel || `Level ${depth}`} Value</label>
                 <input
                   placeholder={`e.g. ${depth === 1 ? 'Red' : depth === 2 ? 'Large' : 'Cotton'}`}
-                  className="w-full bg-transparent font-bold border-b border-gray-300 focus:border-indigo-500 outline-none pb-1 text-lg"
+                  className="w-full bg-transparent font-bold border-b border-[var(--neutral-300)] focus:border-[var(--primary-500)] outline-none pb-1 text-lg text-[var(--foreground)]"
                   value={node.name}
                   onChange={(e) => updateNodeDeep(currentPath, 'name', e.target.value)}
                 />
@@ -82,7 +82,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                     deleteNodeDeep(currentPath);
                   }
                 }}
-                className="text-[10px] font-bold text-red-500 uppercase hover:text-red-700"
+                className="text-[10px] font-bold text-[var(--destructive-500)] uppercase hover:text-[var(--destructive-700)]"
               >
                 Delete
               </button>
@@ -90,47 +90,47 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
             </div>
 
             {isLeaf && (
-              <div className="space-y-4 p-4 bg-gray-50 rounded-xl border border-gray-200 mb-4 animate-in fade-in zoom-in duration-200">
+              <div className="space-y-4 p-4 bg-[var(--neutral-50)] rounded-xl border border-[var(--neutral-200)] mb-4 animate-in fade-in zoom-in duration-200">
                 {/* Identification Row */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase">SKU (Required)</label>
+                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">SKU (Required)</label>
                     <input
                       placeholder="SKU-12345"
-                      className="w-full p-2 border rounded text-sm font-mono bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="w-full p-2 border border-[var(--input)] rounded text-sm font-mono bg-[var(--background)] focus:ring-2 focus:ring-[var(--primary-500)] outline-none text-[var(--foreground)]"
                       value={node.sku}
                       onChange={e => updateNodeDeep(currentPath, 'sku', e.target.value)}
                       required
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase">Barcode</label>
+                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">Barcode</label>
                     <input
                       placeholder="EAN/UPC"
-                      className="w-full p-2 border rounded text-sm bg-white outline-none"
+                      className="w-full p-2 border border-[var(--input)] rounded text-sm bg-[var(--background)] outline-none text-[var(--foreground)]"
                       value={node.barcode || ""}
                       onChange={e => updateNodeDeep(currentPath, 'barcode', e.target.value)}
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase">Weight (kg)</label>
+                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">Weight (kg)</label>
                     <input
                       type="number"
                       placeholder="0.00"
-                      className="w-full p-2 border rounded text-sm bg-white outline-none"
+                      className="w-full p-2 border border-[var(--input)] rounded text-sm bg-[var(--background)] outline-none text-[var(--foreground)]"
                       value={node.weight || ""}
                       onChange={e => updateNodeDeep(currentPath, 'weight', e.target.value)}
                     />
                   </div>
                 </div>
 
-                <div className="space-y-3 pt-4 border-t border-gray-200">
+                <div className="space-y-3 pt-4 border-t border-[var(--neutral-200)]">
                   <div className="flex items-center justify-between">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase tracking-wider">
                       Variant Market Pricing
                     </label>
-                    <div className="bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
-                      <label className="text-xs font-bold text-gray-500 uppercase block mb-2">Add New Market / Currency</label>
+                    <div className="bg-[var(--neutral-50)] p-4 rounded-lg border border-dashed border-[var(--neutral-300)]">
+                      <label className="text-xs font-bold text-[var(--neutral-500)] uppercase block mb-2">Add New Market / Currency</label>
                       <select
                         value=""
                         onChange={(e) => {
@@ -146,7 +146,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                             }));
                           updateNodeDeep(currentPath, 'pricing', [...currentPricing, missingMarkets[0]]);
                         }}
-                        className="w-full md:w-64 border-gray-300 rounded-lg border p-2 text-sm bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="w-full md:w-64 border-[var(--neutral-300)] rounded-lg border p-2 text-sm bg-[var(--background)] focus:ring-2 focus:ring-[var(--primary-500)] outline-none text-[var(--foreground)]"
                       >
                         <option value="" disabled>+ Select currency to add market</option>
                         {CURRENCY_OPTIONS.map((curr: any) => (
@@ -168,7 +168,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                       const pPath = [...currentPath, 'pricing', pIdx];
 
                       return (
-                        <div key={pIdx} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm relative group/price">
+                        <div key={pIdx} className="bg-[var(--card)] border border-[var(--border)] rounded-lg p-3 shadow-sm relative group/price">
                           {
                             !['INR', 'USD'].includes(pGroup.currency) && <button
                               type="button"
@@ -176,7 +176,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                                 const filtered = node.pricing.filter((_: any, i: any) => i !== pIdx);
                                 updateNodeDeep(currentPath, 'pricing', filtered);
                               }}
-                              className="absolute -top-2 -right-2 bg-white text-red-500 border border-red-100 rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover/price:opacity-100 transition-opacity shadow-sm"
+                              className="absolute -top-2 -right-2 bg-[var(--card)] text-[var(--destructive-500)] border border-[var(--destructive-100)] rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover/price:opacity-100 transition-opacity shadow-sm"
                             >
                               ×
                             </button>
@@ -184,11 +184,11 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
 
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div>
-                              <label className="text-[8px] font-black text-gray-400 uppercase">Currency</label>
+                              <label className="text-[8px] font-black text-[var(--neutral-400)] uppercase">Currency</label>
                               <select
                                 value={pGroup.currency}
                                 onChange={(e) => updateNodeDeep(pPath, 'currency', e.target.value)}
-                                className="w-full mt-1 p-1.5 border rounded text-xs bg-gray-50 outline-none focus:ring-1 focus:ring-indigo-500"
+                                className="w-full mt-1 p-1.5 border border-[var(--input)] rounded text-xs bg-[var(--neutral-50)] outline-none focus:ring-1 focus:ring-[var(--primary-500)] text-[var(--foreground)]"
                               >
                                 {CURRENCY_OPTIONS.map((curr) => (
                                   <option key={curr.code} value={curr.code}>{curr.label}</option>
@@ -197,13 +197,13 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                             </div>
 
                             <div>
-                              <label className="text-[8px] font-black text-gray-400 uppercase">Regular Price</label>
+                              <label className="text-[8px] font-black text-[var(--neutral-400)] uppercase">Regular Price</label>
                               <div className="relative mt-1">
-                                <span className="absolute left-2 top-1.5 text-[10px] text-gray-400 font-bold">{selectedCurrency.symbol}</span>
+                                <span className="absolute left-2 top-1.5 text-[10px] text-[var(--neutral-400)] font-bold">{selectedCurrency.symbol}</span>
                                 <input
                                   type="number"
                                   placeholder="0.00"
-                                  className="w-full p-1.5 pl-5 border rounded text-xs outline-none focus:ring-1 focus:ring-indigo-500"
+                                  className="w-full p-1.5 pl-5 border border-[var(--input)] rounded text-xs outline-none focus:ring-1 focus:ring-[var(--primary-500)] bg-[var(--background)] text-[var(--foreground)]"
                                   value={pGroup.originalPrice}
                                   onChange={(e) => updateNodeDeep(pPath, 'originalPrice', e.target.value)}
                                 />
@@ -211,13 +211,13 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                             </div>
 
                             <div>
-                              <label className="text-[8px] font-black text-gray-400 uppercase">Sale Price</label>
+                              <label className="text-[8px] font-black text-[var(--neutral-400)] uppercase">Sale Price</label>
                               <div className="relative mt-1">
-                                <span className="absolute left-2 top-1.5 text-[10px] text-green-500 font-bold">{selectedCurrency.symbol}</span>
+                                <span className="absolute left-2 top-1.5 text-[10px] text-[var(--success-500)] font-bold">{selectedCurrency.symbol}</span>
                                 <input
                                   type="number"
                                   placeholder="0.00"
-                                  className="w-full p-1.5 pl-5 border rounded text-xs text-green-700 font-bold outline-none focus:ring-1 focus:ring-green-500"
+                                  className="w-full p-1.5 pl-5 border border-[var(--input)] rounded text-xs text-[var(--success-700)] font-bold outline-none focus:ring-1 focus:ring-[var(--success-500)] bg-[var(--background)]"
                                   value={pGroup.salePrice}
                                   onChange={(e) => updateNodeDeep(pPath, 'salePrice', e.target.value)}
                                 />
@@ -230,95 +230,95 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-[var(--neutral-200)]">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-blue-500 uppercase">Stock Count</label>
+                    <label className="text-[10px] font-bold text-[var(--info-500)] uppercase">Stock Count</label>
                     <input
                       type="number"
-                      className="w-full p-2 border border-blue-100 rounded text-sm bg-white"
+                      className="w-full p-2 border border-[var(--info-100)] rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
                       value={node.inventory.stock}
                       onChange={e => updateNodeDeep(currentPath, 'inventory.stock', e.target.value)}
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-blue-500 uppercase">Reserved</label>
+                    <label className="text-[10px] font-bold text-[var(--info-500)] uppercase">Reserved</label>
                     <input
                       type="number"
                       disabled
-                      className="w-full p-2 border border-blue-50 rounded text-sm bg-gray-100 cursor-not-allowed"
+                      className="w-full p-2 border border-[var(--info-50)] rounded text-sm bg-[var(--neutral-100)] cursor-not-allowed text-[var(--neutral-500)]"
                       value={node.inventory.reserved || 0}
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-blue-500 uppercase">Low Stock Limit</label>
+                    <label className="text-[10px] font-bold text-[var(--info-500)] uppercase">Low Stock Limit</label>
                     <input
                       type="number"
-                      className="w-full p-2 border border-blue-100 rounded text-sm bg-white"
+                      className="w-full p-2 border border-[var(--info-100)] rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
                       value={node.inventory.lowStockThreshold || 5}
                       onChange={e => updateNodeDeep(currentPath, 'inventory.lowStockThreshold', e.target.value)}
                     />
                   </div>
                 </div>
 
-                <div className="space-y-1 pt-2 border-t border-gray-200">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase block">Dimensions (L x W x H cm)</label>
+                <div className="space-y-1 pt-2 border-t border-[var(--neutral-200)]">
+                  <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase block">Dimensions (L x W x H cm)</label>
                   <div className="flex gap-2">
                     <input
                       placeholder="L"
                       type="number"
-                      className="w-1/3 p-2 border rounded text-sm text-center"
+                      className="w-1/3 p-2 border border-[var(--input)] rounded text-sm text-center bg-[var(--background)] text-[var(--foreground)]"
                       value={node.dimensions.length}
                       onChange={e => updateNodeDeep(currentPath, 'dimensions.length', e.target.value)}
                     />
                     <input
                       placeholder="W"
                       type="number"
-                      className="w-1/3 p-2 border rounded text-sm text-center"
+                      className="w-1/3 p-2 border border-[var(--input)] rounded text-sm text-center bg-[var(--background)] text-[var(--foreground)]"
                       value={node.dimensions.width}
                       onChange={e => updateNodeDeep(currentPath, 'dimensions.width', e.target.value)}
                     />
                     <input
                       placeholder="H"
                       type="number"
-                      className="w-1/3 p-2 border rounded text-sm text-center"
+                      className="w-1/3 p-2 border border-[var(--input)] rounded text-sm text-center bg-[var(--background)] text-[var(--foreground)]"
                       value={node.dimensions.height}
                       onChange={e => updateNodeDeep(currentPath, 'dimensions.height', e.target.value)}
                     />
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-gray-200">
+                <div className="pt-4 border-t border-[var(--neutral-200)]">
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase block">
+                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase block">
                       Variant Media
                     </label>
-                    <span className="text-[9px] text-gray-400 italic">Images or Videos</span>
+                    <span className="text-[9px] text-[var(--neutral-400)] italic">Images or Videos</span>
                   </div>
 
                   <div className="flex flex-wrap gap-3 mb-3">
                     {node.media?.map((m: any, mIdx: any) => (
                       <div key={`old-${mIdx}`} className="relative w-16 h-16 group">
                         {m.type === 'video' ? (
-                          <div className="w-full h-full bg-black flex items-center justify-center rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                          <div className="w-full h-full bg-black flex items-center justify-center rounded-lg border border-[var(--neutral-200)] shadow-sm overflow-hidden">
                             <svg className="w-6 h-6 text-white/50" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" /></svg>
                           </div>
                         ) : (
                           <img
                             src={`${apiUrl.replace('api', '')}${m.url}`}
                             alt="Saved"
-                            className="w-full h-full object-cover rounded-lg border border-gray-200 shadow-sm"
+                            className="w-full h-full object-cover rounded-lg border border-[var(--neutral-200)] shadow-sm"
                           />
                         )}
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
                           <button
                             type="button"
                             onClick={() => handleRemoveExistingVariantImage(currentPath, m.url)}
-                            className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600 shadow-lg"
+                            className="bg-[var(--destructive-500)] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-[var(--destructive-600)] shadow-lg"
                           >
                             ×
                           </button>
                         </div>
-                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[7px] font-bold bg-white px-1 rounded border text-gray-400 uppercase">Saved</span>
+                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[7px] font-bold bg-[var(--card)] px-1 rounded border border-[var(--border)] text-[var(--neutral-400)] uppercase">Saved</span>
                       </div>
                     ))}
 
@@ -329,35 +329,35 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                       return (
                         <div key={`new-${fIdx}`} className="relative w-16 h-16 group">
                           {isVideo ? (
-                            <div className="w-full h-full bg-indigo-900 flex items-center justify-center rounded-lg border-2 border-dashed border-indigo-200">
-                              <span className="text-[8px] font-bold text-indigo-200 uppercase">Video</span>
+                            <div className="w-full h-full bg-[var(--primary-900)] flex items-center justify-center rounded-lg border-2 border-dashed border-[var(--primary-200)]">
+                              <span className="text-[8px] font-bold text-[var(--primary-200)] uppercase">Video</span>
                             </div>
                           ) : (
                             <img
                               src={previewUrl}
                               alt="New"
-                              className="w-full h-full object-cover rounded-lg border-2 border-dashed border-indigo-300 shadow-sm"
+                              className="w-full h-full object-cover rounded-lg border-2 border-dashed border-[var(--primary-300)] shadow-sm"
                               onLoad={() => URL.revokeObjectURL(previewUrl)} // Optional: free memory after load
                             />
                           )}
-                          <div className="absolute inset-0 bg-indigo-600/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                          <div className="absolute inset-0 bg-[var(--primary-600)]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
                             <button
                               type="button"
                               onClick={() => {
                                 const updatedFiles = node.imageFiles.filter((_: any, i: any) => i !== fIdx);
                                 updateNodeDeep(currentPath, 'imageFiles', updatedFiles);
                               }}
-                              className="bg-indigo-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-indigo-700"
+                              className="bg-[var(--primary-600)] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-[var(--primary-700)]"
                             >
                               ×
                             </button>
                           </div>
-                          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[7px] font-bold bg-indigo-600 px-1 rounded border border-indigo-600 text-white uppercase">New</span>
+                          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[7px] font-bold bg-[var(--primary-600)] px-1 rounded border border-[var(--primary-600)] text-white uppercase">New</span>
                         </div>
                       );
                     })}
 
-                    <label className="w-16 h-16 flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-lg cursor-pointer hover:border-indigo-400 hover:bg-indigo-50 transition-all text-gray-400 hover:text-indigo-500">
+                    <label className="w-16 h-16 flex flex-col items-center justify-center border-2 border-dashed border-[var(--neutral-200)] rounded-lg cursor-pointer hover:border-[var(--primary-400)] hover:bg-[var(--primary-50)] transition-all text-[var(--neutral-400)] hover:text-[var(--primary-500)]">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
                       <span className="text-[8px] font-bold mt-1 uppercase">Add</span>
                       <input
@@ -386,7 +386,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
             <button
               type="button"
               onClick={() => addNode([...currentPath, 'children'])}
-              className="text-[10px] font-bold text-indigo-600 uppercase mt-2 hover:text-indigo-800"
+              className="text-[10px] font-bold text-[var(--primary-600)] uppercase mt-2 hover:text-[var(--primary-800)]"
             >
               + Add Sub-Option to {node.name || 'this'}
             </button>
@@ -845,40 +845,40 @@ export default function Products() {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6">{editingId ? "Edit Product" : "Add Product"}</h2>
+      <h2 className="text-2xl font-bold mb-6 text-[var(--foreground)]">{editingId ? "Edit Product" : "Add Product"}</h2>
 
-      <form onSubmit={handleSubmit} className="bg-white shadow rounded p-4 mb-6">
+      <form onSubmit={handleSubmit} className="bg-[var(--card)] shadow rounded p-4 mb-6 border border-[var(--border)]">
         {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> */}
         {/* Main Product Info Card */}
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden mb-6">
-          <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-sm overflow-hidden mb-6">
+          <div className="bg-[var(--neutral-50)] px-4 py-3 border-b border-[var(--neutral-200)] flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--primary-600)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            <h4 className="font-semibold text-gray-700">General Information</h4>
+            <h4 className="font-semibold text-[var(--neutral-700)]">General Information</h4>
           </div>
 
           <div className="p-5 space-y-5">
             <div>
-              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Product Name</label>
+              <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider mb-1 block">Product Name</label>
               <input
                 name="name"
                 required
                 value={form.name}
                 onChange={handleChange}
                 placeholder="e.g. Wireless Noise Cancelling Headphones"
-                className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5"
+                className="w-full border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 bg-[var(--background)] text-[var(--foreground)]"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Brand</label>
+                <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider">Brand</label>
                 <select
                   name="brand"
                   value={form.brand}
                   onChange={handleChange}
-                  className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5 bg-white"
+                  className="w-full border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 bg-[var(--background)] text-[var(--foreground)]"
                 >
                   <option value="">Select Brand</option>
                   {brands.map((b: any) => (
@@ -887,12 +887,12 @@ export default function Products() {
                 </select>
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Primary Category</label>
+                <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider">Primary Category</label>
                 <select
                   name="category"
                   value={form.categories?.[0] || ""}
                   onChange={(e: any) => setForm({ ...form, categories: [e.target.value] })}
-                  className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5 bg-white"
+                  className="w-full border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 bg-[var(--background)] text-[var(--foreground)]"
                 >
                   <option value="">Select Category</option>
                   {categories.map((c: any) => (
@@ -904,25 +904,25 @@ export default function Products() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Short Description</label>
+                <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider">Short Description</label>
                 <textarea
                   name="shortDescription"
                   // rows="2"
                   value={form.shortDescription}
                   onChange={handleChange}
                   placeholder="Brief summary for search results..."
-                  className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5"
+                  className="w-full border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 bg-[var(--background)] text-[var(--foreground)]"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Full Description</label>
+                <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider">Full Description</label>
                 <textarea
                   name="description"
                   // rows="2"
                   value={form.description}
                   onChange={handleChange}
                   placeholder="Detailed product features and specifications..."
-                  className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5"
+                  className="w-full border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 bg-[var(--background)] text-[var(--foreground)]"
                 />
               </div>
             </div>
@@ -930,28 +930,28 @@ export default function Products() {
         </div>
 
         {/* Pricing Card */}
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden mb-6">
+        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-sm overflow-hidden mb-6">
           {/* Header */}
-          <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+          <div className="bg-[var(--neutral-50)] px-4 py-3 border-b border-[var(--neutral-200)] flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--success-600)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h4 className="font-semibold text-gray-700">Market Pricing</h4>
+              <h4 className="font-semibold text-[var(--neutral-700)]">Market Pricing</h4>
             </div>
-            <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">
+            <span className="text-[10px] font-bold text-[var(--primary-600)] bg-[var(--primary-50)] px-2 py-1 rounded">
               {form.pricing?.length} Markets Active
             </span>
           </div>
 
           <div className="p-5 space-y-6">
             {/* Currency Selector Tool */}
-            <div className="bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
-              <label className="text-xs font-bold text-gray-500 uppercase block mb-2">Add New Market / Currency</label>
+            <div className="bg-[var(--neutral-50)] p-4 rounded-lg border border-dashed border-[var(--neutral-300)]">
+              <label className="text-xs font-bold text-[var(--neutral-500)] uppercase block mb-2">Add New Market / Currency</label>
               <select
                 value=""
                 onChange={(e) => handleAddRegion(e.target.value)}
-                className="w-full md:w-64 border-gray-300 rounded-lg border p-2 text-sm bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                className="w-full md:w-64 border-[var(--input)] rounded-lg border p-2 text-sm bg-[var(--background)] focus:ring-2 focus:ring-[var(--primary-500)] outline-none text-[var(--foreground)]"
               >
                 <option value="" disabled>+ Select currency to add market</option>
                 {CURRENCY_OPTIONS.map((curr) => (
@@ -972,52 +972,52 @@ export default function Products() {
                 const currencyDetail = CURRENCY_OPTIONS.find(c => c.code === priceGroup.currency);
 
                 return (
-                  <div key={priceGroup.currency} className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm hover:shadow-md transition-shadow relative group">
+                  <div key={priceGroup.currency} className="border border-[var(--border)] rounded-xl p-4 bg-[var(--card)] shadow-sm hover:shadow-md transition-shadow relative group">
                     {/* Remove Button */}
                     {
                       !['INR', 'USD'].includes(priceGroup.currency) && <button
                         type="button"
                         onClick={() => handleRemoveRegion(idx)}
-                        className="absolute -top-2 -right-2 bg-red-100 text-red-600 rounded-full w-6 h-6 flex items-center justify-center border border-red-200 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute -top-2 -right-2 bg-[var(--destructive-100)] text-[var(--destructive-600)] rounded-full w-6 h-6 flex items-center justify-center border border-[var(--destructive-200)] opacity-0 group-hover:opacity-100 transition-opacity"
                       >
                         ×
                       </button>
                     }
 
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">
+                      <div className="w-8 h-8 rounded-full bg-[var(--primary-600)] text-white flex items-center justify-center text-xs font-bold">
                         {currencyDetail?.symbol}
                       </div>
                       <div>
-                        <h5 className="text-sm font-bold text-gray-800">{priceGroup.currency} Market</h5>
-                        <p className="text-[10px] text-gray-400 font-mono">{currencyDetail?.label}</p>
+                        <h5 className="text-sm font-bold text-[var(--neutral-800)]">{priceGroup.currency} Market</h5>
+                        <p className="text-[10px] text-[var(--neutral-400)] font-mono">{currencyDetail?.label}</p>
                       </div>
                     </div>
 
                     <div className="space-y-3">
                       <div>
-                        <label className="text-[10px] font-bold text-gray-400 uppercase">Regular Price</label>
+                        <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">Regular Price</label>
                         <div className="relative mt-1">
-                          <span className="absolute left-3 top-2 text-gray-400 text-xs font-bold">{currencyDetail?.symbol}</span>
+                          <span className="absolute left-3 top-2 text-[var(--neutral-400)] text-xs font-bold">{currencyDetail?.symbol}</span>
                           <input
                             type="number"
                             value={priceGroup.originalPrice}
                             onChange={(e) => handlePricingChange(idx, "originalPrice", e.target.value)}
-                            className="w-full border-gray-200 rounded-lg border p-2 pl-7 text-sm focus:ring-1 focus:ring-indigo-500 outline-none"
+                            className="w-full border-[var(--input)] rounded-lg border p-2 pl-7 text-sm focus:ring-1 focus:ring-[var(--primary-500)] outline-none bg-[var(--background)] text-[var(--foreground)]"
                             placeholder="0.00"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="text-[10px] font-bold text-gray-400 uppercase">Sale Price</label>
+                        <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">Sale Price</label>
                         <div className="relative mt-1">
-                          <span className="absolute left-3 top-2 text-green-600 text-xs font-bold">{currencyDetail?.symbol}</span>
+                          <span className="absolute left-3 top-2 text-[var(--success-600)] text-xs font-bold">{currencyDetail?.symbol}</span>
                           <input
                             type="number"
                             value={priceGroup.salePrice}
                             onChange={(e) => handlePricingChange(idx, "salePrice", e.target.value)}
-                            className="w-full border-gray-200 rounded-lg border p-2 pl-7 text-sm text-green-700 font-bold focus:ring-1 focus:ring-green-500 outline-none"
+                            className="w-full border-[var(--input)] rounded-lg border p-2 pl-7 text-sm text-[var(--success-700)] font-bold focus:ring-1 focus:ring-[var(--success-500)] outline-none bg-[var(--background)]"
                             placeholder="0.00"
                           />
                         </div>
@@ -1028,8 +1028,8 @@ export default function Products() {
               })}
 
               {form.pricing.length === 0 && (
-                <div className="col-span-full py-10 text-center border-2 border-dashed border-gray-100 rounded-xl">
-                  <p className="text-gray-400 text-sm">No markets selected. Select a currency above to set prices.</p>
+                <div className="col-span-full py-10 text-center border-2 border-dashed border-[var(--neutral-100)] rounded-xl">
+                  <p className="text-[var(--neutral-400)] text-sm">No markets selected. Select a currency above to set prices.</p>
                 </div>
               )}
             </div>
@@ -1037,20 +1037,20 @@ export default function Products() {
         </div>
 
         {/* Settings / Flags Row */}
-        <div className="flex flex-wrap gap-4 mb-6 bg-indigo-50 p-4 rounded-xl border border-indigo-100">
-          <label className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-gray-200 cursor-pointer hover:border-indigo-300 transition-all select-none shadow-sm">
-            <input type="checkbox" name="isActive" checked={form.isActive} onChange={handleChange} className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500" />
-            <span className="text-sm font-medium text-gray-700">Active Status</span>
+        <div className="flex flex-wrap gap-4 mb-6 bg-[var(--primary-50)] p-4 rounded-xl border border-[var(--primary-100)]">
+          <label className="flex items-center gap-2 px-3 py-2 bg-[var(--card)] rounded-lg border border-[var(--border)] cursor-pointer hover:border-[var(--primary-300)] transition-all select-none shadow-sm">
+            <input type="checkbox" name="isActive" checked={form.isActive} onChange={handleChange} className="w-4 h-4 text-[var(--primary-600)] rounded focus:ring-[var(--primary-500)]" />
+            <span className="text-sm font-medium text-[var(--neutral-700)]">Active Status</span>
           </label>
 
-          <label className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-gray-200 cursor-pointer hover:border-yellow-300 transition-all select-none shadow-sm">
-            <input type="checkbox" name="isFeatured" checked={form.isFeatured} onChange={handleChange} className="w-4 h-4 text-yellow-500 rounded focus:ring-yellow-500" />
-            <span className="text-sm font-medium text-gray-700">Featured Product</span>
+          <label className="flex items-center gap-2 px-3 py-2 bg-[var(--card)] rounded-lg border border-[var(--border)] cursor-pointer hover:border-[var(--warning-300)] transition-all select-none shadow-sm">
+            <input type="checkbox" name="isFeatured" checked={form.isFeatured} onChange={handleChange} className="w-4 h-4 text-[var(--warning-500)] rounded focus:ring-[var(--warning-500)]" />
+            <span className="text-sm font-medium text-[var(--neutral-700)]">Featured Product</span>
           </label>
 
-          <label className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-gray-200 cursor-pointer hover:border-blue-300 transition-all select-none shadow-sm">
-            <input type="checkbox" name="isOnlyProduct" checked={form.isOnlyProduct} onChange={handleChange} className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
-            <span className="text-sm font-medium text-gray-700">Single Product (No Variants)</span>
+          <label className="flex items-center gap-2 px-3 py-2 bg-[var(--card)] rounded-lg border border-[var(--border)] cursor-pointer hover:border-[var(--info-300)] transition-all select-none shadow-sm">
+            <input type="checkbox" name="isOnlyProduct" checked={form.isOnlyProduct} onChange={handleChange} className="w-4 h-4 text-[var(--info-600)] rounded focus:ring-[var(--info-500)]" />
+            <span className="text-sm font-medium text-[var(--neutral-700)]">Single Product (No Variants)</span>
           </label>
         </div>
 
@@ -1058,67 +1058,67 @@ export default function Products() {
         {
           form.isOnlyProduct && (
             <div className="mt-6 animate-in fade-in slide-in-from-top-2 duration-300">
-              <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-sm overflow-hidden">
                 {/* Section Header */}
-                <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="bg-[var(--neutral-50)] px-4 py-3 border-b border-[var(--neutral-200)] flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--primary-600)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
-                  <h4 className="font-semibold text-gray-700">Inventory & Logistics Details</h4>
+                  <h4 className="font-semibold text-[var(--neutral-700)]">Inventory & Logistics Details</h4>
                 </div>
 
                 <div className="p-5 space-y-6">
                   {/* Row 1: Identifiers and Stock */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Product SKU</label>
+                      <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider">Product SKU</label>
                       <input
                         name="sku"
                         value={form.sku}
                         onChange={handleChange}
                         placeholder="e.g. PRD-12345"
-                        className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5"
+                        className="w-full border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 bg-[var(--background)] text-[var(--foreground)]"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Available Stock</label>
+                      <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider">Available Stock</label>
                       <input
                         type="number"
                         name="stock"
                         value={form.stock}
                         onChange={handleChange}
-                        className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5"
+                        className="w-full border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 bg-[var(--background)] text-[var(--foreground)]"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Reserved Stock</label>
+                      <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider">Reserved Stock</label>
                       <input
                         name="reserved"
                         type="number"
                         value={form.reserved}
                         onChange={handleChange}
-                        className="w-full border-gray-300 rounded-lg shadow-sm sm:text-sm border p-2.5 bg-gray-50 cursor-not-allowed"
+                        className="w-full border-[var(--input)] rounded-lg shadow-sm sm:text-sm border p-2.5 bg-[var(--neutral-50)] cursor-not-allowed text-[var(--neutral-500)]"
                         readOnly
                       />
                     </div>
                   </div>
 
                   {/* Row 2: Thresholds and Logistics */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-100">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-[var(--neutral-100)]">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Low Stock Warning</label>
+                      <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider">Low Stock Warning</label>
                       <input
                         name="lowStockThreshold"
                         type="number"
                         value={form.lowStockThreshold}
                         onChange={handleChange}
-                        className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5"
+                        className="w-full border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 bg-[var(--background)] text-[var(--foreground)]"
                       />
-                      <p className="text-[10px] text-gray-400">Notify when stock hits this level</p>
+                      <p className="text-[10px] text-[var(--neutral-400)]">Notify when stock hits this level</p>
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Weight (kg)</label>
+                      <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider">Weight (kg)</label>
                       <div className="relative">
                         <input
                           name="weight"
@@ -1126,13 +1126,13 @@ export default function Products() {
                           value={form.weight}
                           onChange={handleChange}
                           placeholder="0.00"
-                          className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5"
+                          className="w-full border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 bg-[var(--background)] text-[var(--foreground)]"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Dimensions (L x W x H cm)</label>
+                      <label className="text-xs font-bold text-[var(--neutral-500)] uppercase tracking-wider">Dimensions (L x W x H cm)</label>
                       <div className="flex gap-2">
                         <input
                           name="length"
@@ -1140,7 +1140,7 @@ export default function Products() {
                           value={form.dimensions.length}
                           onChange={(e) => handleDimensionChange("length", e.target.value)}
                           placeholder="L"
-                          className="border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5 w-1/3 text-center"
+                          className="border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 w-1/3 text-center bg-[var(--background)] text-[var(--foreground)]"
                         />
                         <input
                           name="width"
@@ -1148,7 +1148,7 @@ export default function Products() {
                           value={form.dimensions.width}
                           onChange={(e) => handleDimensionChange("width", e.target.value)}
                           placeholder="W"
-                          className="border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5 w-1/3 text-center"
+                          className="border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 w-1/3 text-center bg-[var(--background)] text-[var(--foreground)]"
                         />
                         <input
                           name="height"
@@ -1156,7 +1156,7 @@ export default function Products() {
                           value={form.dimensions.height}
                           onChange={(e) => handleDimensionChange("height", e.target.value)}
                           placeholder="H"
-                          className="border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2.5 w-1/3 text-center"
+                          className="border-[var(--input)] rounded-lg shadow-sm focus:ring-[var(--primary-500)] focus:border-[var(--primary-500)] sm:text-sm border p-2.5 w-1/3 text-center bg-[var(--background)] text-[var(--foreground)]"
                         />
                       </div>
                     </div>
@@ -1184,7 +1184,7 @@ export default function Products() {
               <button
                 type="button"
                 onClick={() => addNode([])}
-                className="w-full py-4 border-2 border-dashed border-indigo-200 text-indigo-500 font-bold rounded-xl hover:bg-indigo-50 transition-all"
+                className="w-full py-4 border-2 border-dashed border-[var(--primary-200)] text-[var(--primary-500)] font-bold rounded-xl hover:bg-[var(--primary-50)] transition-all"
               >
                 + Add New Root Variant (Color/Group)
               </button>
@@ -1194,13 +1194,13 @@ export default function Products() {
         }
 
         {/* Global Images */}
-        <div className="mt-8 border-t border-gray-200 pt-6">
+        <div className="mt-8 border-t border-[var(--neutral-200)] pt-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h4 className="text-sm font-bold text-gray-700 uppercase tracking-wider">Global Product Media</h4>
-              <p className="text-[11px] text-gray-400">Main images and videos for the product showcase</p>
+              <h4 className="text-sm font-bold text-[var(--neutral-700)] uppercase tracking-wider">Global Product Media</h4>
+              <p className="text-[11px] text-[var(--neutral-400)]">Main images and videos for the product showcase</p>
             </div>
-            <label className="cursor-pointer bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-4 py-2 rounded-lg text-xs font-bold transition-colors border border-indigo-200">
+            <label className="cursor-pointer bg-[var(--primary-50)] hover:bg-[var(--primary-100)] text-[var(--primary-600)] px-4 py-2 rounded-lg text-xs font-bold transition-colors border border-[var(--primary-200)]">
               <span>+ Add Media</span>
               <input
                 type="file"
@@ -1217,7 +1217,7 @@ export default function Products() {
             {form.media?.map((m: any, idx: any) => (
               <div key={`saved-${idx}`} className="relative w-24 h-24 group">
                 {m.type === 'video' ? (
-                  <div className="w-full h-full bg-black flex items-center justify-center rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                  <div className="w-full h-full bg-black flex items-center justify-center rounded-xl overflow-hidden border border-[var(--neutral-200)] shadow-sm">
                     <div className="text-white flex flex-col items-center">
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" /></svg>
                       <span className="text-[8px] font-bold uppercase mt-1">Video</span>
@@ -1227,7 +1227,7 @@ export default function Products() {
                   <img
                     src={m.url.startsWith('http') || m.url.startsWith('blob') ? m.url : `${apiUrl.replace('api', '')}${m.url}`}
                     alt={m.alt || "Product"}
-                    className="w-full h-full object-cover rounded-xl border border-gray-200 shadow-sm"
+                    className="w-full h-full object-cover rounded-xl border border-[var(--neutral-200)] shadow-sm"
                   />
                 )}
 
@@ -1236,13 +1236,13 @@ export default function Products() {
                   <button
                     type="button"
                     onClick={() => handleRemoveMedia(m.url)}
-                    className="bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center shadow-lg hover:bg-red-600 transform hover:scale-110 transition-all"
+                    className="bg-[var(--destructive-500)] text-white rounded-full w-7 h-7 flex items-center justify-center shadow-lg hover:bg-[var(--destructive-600)] transform hover:scale-110 transition-all"
                   >
                     <span className="text-lg leading-none">×</span>
                   </button>
                 </div>
 
-                <span className="absolute -top-2 -right-1 text-[8px] font-black bg-white text-gray-400 px-1.5 py-0.5 rounded-full border shadow-sm uppercase">Saved</span>
+                <span className="absolute -top-2 -right-1 text-[8px] font-black bg-[var(--card)] text-[var(--neutral-400)] px-1.5 py-0.5 rounded-full border shadow-sm uppercase">Saved</span>
               </div>
             ))}
           </div>
@@ -1252,7 +1252,7 @@ export default function Products() {
         <div className="mt-8 flex gap-4">
           <button
             type="submit"
-            className="bg-indigo-600 text-white px-8 py-3 rounded font-bold hover:bg-indigo-700 shadow-lg"
+            className="bg-[var(--primary-600)] text-white px-8 py-3 rounded font-bold hover:bg-[var(--primary-700)] shadow-lg"
           >
             {editingId ? "Update Product" : "Create Product"}
           </button>
@@ -1260,7 +1260,7 @@ export default function Products() {
             <button
               type="button"
               onClick={resetForm}
-              className="bg-gray-500 text-white px-8 py-3 rounded font-bold hover:bg-gray-600"
+              className="bg-[var(--neutral-500)] text-white px-8 py-3 rounded font-bold hover:bg-[var(--neutral-600)]"
             >
               Cancel
             </button>
@@ -1269,14 +1269,14 @@ export default function Products() {
       </form >
 
       {/* Product List */}
-      < div className="mt-12 bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden" >
+      < div className="mt-12 bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-sm overflow-hidden" >
         {/* Table Header Section */}
-        < div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center" >
+        < div className="px-6 py-4 border-b border-[var(--border)] bg-[var(--neutral-50)] flex justify-between items-center" >
           <div>
-            <h2 className="text-lg font-bold text-gray-800">Product Inventory</h2>
-            <p className="text-sm text-gray-500">Manage your product catalog and stock levels</p>
+            <h2 className="text-lg font-bold text-[var(--neutral-800)]">Product Inventory</h2>
+            <p className="text-sm text-[var(--neutral-500)]">Manage your product catalog and stock levels</p>
           </div>
-          <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold uppercase tracking-wider">
+          <span className="px-3 py-1 bg-[var(--primary-100)] text-[var(--primary-700)] rounded-full text-xs font-bold uppercase tracking-wider">
             {products.length} Products Total
           </span>
         </div >
@@ -1284,20 +1284,20 @@ export default function Products() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white border-b border-gray-200">
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Product Detail</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Brand</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Categories</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+              <tr className="bg-[var(--card)] border-b border-[var(--border)]">
+                <th className="px-6 py-4 text-xs font-bold text-[var(--neutral-400)] uppercase tracking-wider">Product Detail</th>
+                <th className="px-6 py-4 text-xs font-bold text-[var(--neutral-400)] uppercase tracking-wider">Brand</th>
+                <th className="px-6 py-4 text-xs font-bold text-[var(--neutral-400)] uppercase tracking-wider">Categories</th>
+                <th className="px-6 py-4 text-xs font-bold text-[var(--neutral-400)] uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[var(--neutral-100)]">
               {products.map((p: any) => (
-                <tr key={p._id} className="hover:bg-gray-50 transition-colors group">
+                <tr key={p._id} className="hover:bg-[var(--neutral-50)] transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       {/* Product Thumbnail Placeholder */}
-                      <div className="w-10 h-10 rounded bg-gray-100 flex-shrink-0 flex items-center justify-center border border-gray-200 overflow-hidden">
+                      <div className="w-10 h-10 rounded bg-[var(--neutral-100)] flex-shrink-0 flex items-center justify-center border border-[var(--neutral-200)] overflow-hidden">
                         {p.images?.[0]?.url ? (
                           <img
                             src={`${apiUrl.replace('api', '')}${p.images[0].url}`}
@@ -1305,30 +1305,30 @@ export default function Products() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--neutral-400)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
                         )}
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-gray-900">{p.name}</div>
-                        <div className="text-xs text-gray-500 font-mono uppercase tracking-tighter">{p.sku || "No SKU"}</div>
+                        <div className="text-sm font-bold text-[var(--neutral-900)]">{p.name}</div>
+                        <div className="text-xs text-[var(--neutral-500)] font-mono uppercase tracking-tighter">{p.sku || "No SKU"}</div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--neutral-100)] text-[var(--neutral-800)] border border-[var(--neutral-200)]">
                       {p.brand?.title || "No Brand"}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-1">
                       {p.categories?.length > 0 ? p.categories.map((c: any) => (
-                        <span key={c._id} className="text-[11px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                        <span key={c._id} className="text-[11px] font-semibold text-[var(--primary-600)] bg-[var(--primary-50)] px-2 py-0.5 rounded border border-[var(--primary-100)]">
                           {c.title}
                         </span>
                       )) : (
-                        <span className="text-xs text-gray-400 italic">Uncategorized</span>
+                        <span className="text-xs text-[var(--neutral-400)] italic">Uncategorized</span>
                       )}
                     </div>
                   </td>
@@ -1337,7 +1337,7 @@ export default function Products() {
                       <button
                         type="button"
                         onClick={() => handleEdit(p)}
-                        className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors group-hover:shadow-sm"
+                        className="p-2 text-[var(--primary-600)] hover:bg-[var(--primary-50)] rounded-lg transition-colors group-hover:shadow-sm"
                         title="Edit Product"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1347,7 +1347,7 @@ export default function Products() {
                       <button
                         type="button"
                         onClick={() => handleDelete(p._id)}
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors group-hover:shadow-sm"
+                        className="p-2 text-[var(--destructive-500)] hover:bg-[var(--destructive-50)] rounded-lg transition-colors group-hover:shadow-sm"
                         title="Delete Product"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1361,7 +1361,7 @@ export default function Products() {
               {products.length === 0 && (
                 <tr>
                   <td className="px-6 py-12 text-center">
-                    <div className="text-gray-400 italic">No products found in your inventory.</div>
+                    <div className="text-[var(--neutral-400)] italic">No products found in your inventory.</div>
                   </td>
                 </tr>
               )}

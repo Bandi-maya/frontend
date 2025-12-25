@@ -23,12 +23,23 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser]: any = useState<User | null>(() => {
-    // Load user from localStorage if available
-    const stored = localStorage.getItem("user");
-    return stored ? JSON.parse(stored) : null;
-  });
-  const [loading, setLoading] = useState(false);
+  const [user, setUser]: any = useState<User | null>(null);
+  const [loading, setLoading] = useState(true); // Start with loading true
+
+  useEffect(() => {
+    // Load user from localStorage on initial client-side render
+    try {
+      const stored = localStorage.getItem("user");
+      if (stored) {
+        setUser(JSON.parse(stored));
+      }
+    } catch (error) {
+      console.error("Failed to parse user from localStorage", error);
+      localStorage.removeItem("user");
+    } finally {
+      setLoading(false); // Stop loading after attempting to load from storage
+    }
+  }, []);
 
   // Save user to localStorage whenever it changes
   useEffect(() => {

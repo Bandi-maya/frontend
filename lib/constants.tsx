@@ -1,4 +1,4 @@
-export const apiUrl = "http://localhost:/api";
+export const apiUrl = "/api";
 
 
 export const CURRENCY_OPTIONS = [

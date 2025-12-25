@@ -1,9 +1,6 @@
 import "./globals.css";
-import Providers from "./providers";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ChatBot from "@/components/ChatBot";
 import MainLayout from "./MainLayout";
+import Providers from "./providers";
 
 export const metadata = {
   title: "My E-commerce Store | Buy Online",
@@ -22,13 +19,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <html lang="en">
       <body>
-        <MainLayout>
-          {children}
-        </MainLayout>
+        <Providers>
+          <MainLayout>{children}</MainLayout>
+        </Providers>
       </body>
     </html>
   );
