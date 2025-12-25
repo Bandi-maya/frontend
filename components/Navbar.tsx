@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import {
   Menu,
   X,
@@ -29,30 +29,26 @@ import {
 import { useUser } from "@/contexts/UserContext";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface NavbarProps {
   onLanguageToggle?: (language: string) => void;
   currentLanguage?: string;
 }
 
-const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
+const Navbar = ({ onLanguageToggle }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  
+
   const pathname = usePathname();
   const router = useRouter();
   const { cartItems } = useCart();
   const { user, logout } = useUser();
   const navRef = useRef<HTMLDivElement>(null);
-  
-  const [isArabic, setIsArabic] = useState(currentLanguage === "ar");
 
-  // Sync language state with props
-  useEffect(() => {
-    setIsArabic(currentLanguage === "ar");
-  }, [currentLanguage]);
+  const { lang, toggleLang } = useLanguage();
 
   // Handle scroll effect
   useEffect(() => {
@@ -99,13 +95,7 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
   }, []);
 
   const toggleLanguage = () => {
-    const newLanguage = isArabic ? "en" : "ar";
-    setIsArabic(!isArabic);
-    if (onLanguageToggle) {
-      onLanguageToggle(newLanguage);
-    }
-    // Don't close menu immediately to show feedback, or close if preferred:
-    // setIsOpen(false);
+    toggleLang();
   };
 
   const toggleSearch = () => {
@@ -132,6 +122,8 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
     setIsOpen(false);
   };
 
+  const isArabic = useMemo(() => lang == 'ar', [lang])
+
   const navLinks = [
     { name: isArabic ? "الرئيسية" : "Home", path: "/", icon: <Home className="w-5 h-5" /> },
     { name: isArabic ? "المتجر" : "Shop", path: "/shop", icon: <Store className="w-5 h-5" /> },
@@ -144,20 +136,18 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
 
   return (
     <>
-      <nav 
+      <nav
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
-          scrolled 
-            ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-md" 
-            : "bg-white border-b border-gray-100"
-        }`}
-        dir={isArabic ? "rtl" : "ltr"}
+        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${scrolled
+          ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-md"
+          : "bg-white border-b border-gray-100"
+          }`}
       >
         <div className="container mx-auto px-4">
           <div className="flex h-16 md:h-20 items-center justify-between">
             {/* Logo */}
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="flex items-center gap-1 group relative z-[70]"
               onClick={() => setIsOpen(false)}
             >
@@ -173,11 +163,10 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
                 <Link
                   key={link.path}
                   href={link.path}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    isActive(link.path)
-                      ? "bg-primary text-white shadow-sm"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                  }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isActive(link.path)
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    }`}
                 >
                   {link.name}
                 </Link>
@@ -188,16 +177,16 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
             <div className="flex items-center gap-2 relative z-[70]">
               {/* Desktop Search */}
               <div className="hidden md:block relative">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
+                <Button
+                  variant="ghost"
+                  size="icon"
                   className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                   onClick={toggleSearch}
                   aria-label="Search"
                 >
                   <Search className="w-5 h-5" />
                 </Button>
-                
+
                 {isSearchOpen && (
                   <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 p-2 animate-fade-in">
                     <form onSubmit={handleSearch} className="flex gap-2">
@@ -219,7 +208,7 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
               </div>
 
               {/* Desktop Language Toggle */}
-              <div 
+              <div
                 onClick={toggleLanguage}
                 className="relative hidden sm:flex items-center bg-gray-100 border border-gray-300 h-9 w-24 rounded-full p-1 cursor-pointer hover:border-primary/50 transition-all overflow-hidden select-none"
                 role="button"
@@ -227,10 +216,9 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && toggleLanguage()}
               >
-                <div 
-                  className={`absolute top-1 bottom-1 w-[46px] bg-primary rounded-full transition-all duration-300 ease-in-out shadow-sm ${
-                    isArabic ? 'right-1' : 'left-1'
-                  }`}
+                <div
+                  className={`absolute top-1 bottom-1 w-[46px] bg-primary rounded-full transition-all duration-300 ease-in-out shadow-sm ${isArabic ? 'right-1' : 'left-1'
+                    }`}
                 />
                 <span className={`relative z-10 flex-1 text-center text-[10px] font-bold transition-colors duration-300 ${!isArabic ? 'text-white' : 'text-gray-600'}`}>EN</span>
                 <span className={`relative z-10 flex-1 text-center text-[10px] font-bold transition-colors duration-300 ${isArabic ? 'text-white' : 'text-gray-600'}`}>عربي</span>
@@ -238,9 +226,9 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
 
               {/* Cart Button */}
               <Link href="/cart">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
+                <Button
+                  variant="ghost"
+                  size="icon"
                   className="relative text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                   aria-label={`${isArabic ? "عربة التسوق" : "Shopping Cart"}`}
                 >
@@ -295,10 +283,9 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
         </div>
 
         {/* Mobile Navigation Overlay */}
-        <div 
-          className={`md:hidden fixed inset-0 top-16 bg-white z-50 transition-all duration-300 ease-in-out transform ${
-            isOpen ? "translate-x-0 opacity-100 visible" : (isArabic ? "-translate-x-full" : "translate-x-full") + " opacity-0 invisible"
-          }`}
+        <div
+          className={`md:hidden fixed inset-0 top-16 bg-white z-50 transition-all duration-300 ease-in-out transform ${isOpen ? "translate-x-0 opacity-100 visible" : (isArabic ? "-translate-x-full" : "translate-x-full") + " opacity-0 invisible"
+            }`}
           style={{ height: 'calc(100vh - 64px)' }}
         >
           <div className="h-full overflow-y-auto bg-white px-4 py-6 flex flex-col">
@@ -323,11 +310,10 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
                   key={link.path}
                   href={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center gap-4 px-4 py-4 rounded-xl font-medium transition-all ${
-                    isActive(link.path)
-                      ? "bg-primary text-white shadow-md"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
+                  className={`flex items-center gap-4 px-4 py-4 rounded-xl font-medium transition-all ${isActive(link.path)
+                    ? "bg-primary text-white shadow-md"
+                    : "text-gray-700 hover:bg-gray-50"
+                    }`}
                 >
                   {link.icon}
                   <span className="text-lg">{link.name}</span>
@@ -366,11 +352,11 @@ const Navbar = ({ onLanguageToggle, currentLanguage = "en" }: NavbarProps) => {
                   <span>{isArabic ? "English" : "العربية"}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                   <span className={`text-xs ${!isArabic ? 'text-primary' : 'text-gray-400'}`}>EN</span>
-                   <div className="w-10 h-5 bg-gray-200 rounded-full relative">
-                      <div className={`absolute top-1 w-3 h-3 rounded-full bg-primary transition-all ${isArabic ? 'right-1' : 'left-1'}`} />
-                   </div>
-                   <span className={`text-xs ${isArabic ? 'text-primary' : 'text-gray-400'}`}>AR</span>
+                  <span className={`text-xs ${!isArabic ? 'text-primary' : 'text-gray-400'}`}>EN</span>
+                  <div className="w-10 h-5 bg-gray-200 rounded-full relative">
+                    <div className={`absolute top-1 w-3 h-3 rounded-full bg-primary transition-all ${isArabic ? 'right-1' : 'left-1'}`} />
+                  </div>
+                  <span className={`text-xs ${isArabic ? 'text-primary' : 'text-gray-400'}`}>AR</span>
                 </div>
               </button>
             </div>

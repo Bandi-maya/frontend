@@ -2,9 +2,13 @@
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import { useSettings } from "@/contexts/SettingsContext";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useMemo } from "react";
 
 const Footer = () => {
   const { contact } = useSettings();
+  const { lang } = useLanguage();
+  const isArabic = useMemo(() => lang === 'ar', [lang])
 
   return (
     <footer
