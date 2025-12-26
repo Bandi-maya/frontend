@@ -12,6 +12,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { I18nProvider } from "@/contexts/I18nContext";
 
 const queryClient = new QueryClient();
 
@@ -25,9 +26,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               <ProductsProvider>
                 <CartProvider>
                   <LanguageProvider>
-                    <Toaster />
-                    <Sonner />
-                    {children}
+                    <I18nProvider>
+                      <Toaster />
+                      <Sonner />
+                      {children}
+                    </I18nProvider>
                   </LanguageProvider>
                 </CartProvider>
               </ProductsProvider>

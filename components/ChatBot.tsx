@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/contexts/I18nContext";
 
 interface Message {
   id: number;
@@ -13,8 +14,9 @@ interface Message {
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: "Hi! 👋 Welcome to The STEM Park! How can I help you today?", isBot: true },
+    { id: 1, text: t('chatbot.welcome'), isBot: true },
   ]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -28,10 +30,10 @@ const ChatBot = () => {
   }, [messages, isOpen]);
 
   const quickReplies = [
-    "Browse STEM Kits",
-    "3D Printer Rental",
-    "STEM Programs",
-    "Track Order",
+    t('chatbot.quickReplies.browseKits'),
+    t('chatbot.quickReplies.printerRental'),
+    t('chatbot.quickReplies.programs'),
+    t('chatbot.quickReplies.trackOrder'),
   ];
 
   const handleSend = (text?: string) => {
@@ -48,15 +50,15 @@ const ChatBot = () => {
 
     setTimeout(() => {
       const botResponses: Record<string, string> = {
-        "Browse STEM Kits": "Great choice! 🚀 We have robotics kits, solar kits, drone kits, and more. Visit our Shop page to explore all products!",
-        "3D Printer Rental": "Our 3D printer rental starts at $15/hour. You can book time slots online!",
-        "STEM Programs": "We offer STEM Clubs for hands-on learning. Check our Programs page for schedules!",
-        "Track Order": "To track your order, please provide your order number or email.",
+        [t('chatbot.quickReplies.browseKits')]: t('chatbot.responses.browseKits'),
+        [t('chatbot.quickReplies.printerRental')]: t('chatbot.responses.printerRental'),
+        [t('chatbot.quickReplies.programs')]: t('chatbot.responses.programs'),
+        [t('chatbot.quickReplies.trackOrder')]: t('chatbot.responses.trackOrder'),
       };
 
       const botMessage: Message = {
         id: Date.now(),
-        text: botResponses[messageText] || "Thanks for your message! Our team will get back to you shortly.",
+        text: botResponses[messageText] || t('chatbot.responses.default') || "Thanks for your message! Our team will get back to you shortly.",
         isBot: true,
       };
       setMessages((prev) => [...prev, botMessage]);
@@ -99,10 +101,10 @@ const ChatBot = () => {
                   <Bot className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base leading-tight">STEM Park Assistant</h3>
+                  <h3 className="font-bold text-base leading-tight">{t('chatbot.header')}</h3>
                   <div className="flex items-center gap-1.5 mt-1">
                     <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    <p className="text-[11px] text-white/80 font-medium uppercase tracking-wider">Online</p>
+                    <p className="text-[11px] text-white/80 font-medium uppercase tracking-wider">{t('chatbot.online')}</p>
                   </div>
                 </div>
               </div>
@@ -154,7 +156,7 @@ const ChatBot = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSend()}
-                  placeholder="Type a message..."
+                  placeholder={t('chatbot.typeMessage')}
                   className="flex-1 py-2.5 bg-transparent border-0 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none"
                 />
                 <Button

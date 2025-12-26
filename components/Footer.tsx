@@ -4,11 +4,13 @@ import { useSettings } from "@/contexts/SettingsContext";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useMemo } from "react";
+import { useI18n } from "@/contexts/I18nContext";
 
 const Footer = () => {
   const { contact } = useSettings();
   const { lang } = useLanguage();
-  const isArabic = useMemo(() => lang === 'ar', [lang])
+  const isArabic = useMemo(() => lang === 'ar' || lang === 'qa', [lang])
+  const { t } = useI18n();
 
   return (
     <footer
@@ -64,7 +66,7 @@ const Footer = () => {
                 color: 'var(--footer-text-muted)',
               }}
             >
-              Inspiring the next generation of innovators through hands-on STEM education and quality products.
+              {t('footer.brandDescription')}
             </p>
             <div className="flex gap-3">
               <a
@@ -166,13 +168,13 @@ const Footer = () => {
                 color: 'var(--footer-text)',
               }}
             >
-              Quick Links
+              {t('footer.quickLinks')}
             </h4>
             <ul className="space-y-2">
               {[
-                { href: "/shop", text: "Shop All" },
-                { href: "/programs", text: "STEM Programs" },
-                { href: "/contact", text: "Contact Us" },
+                { href: "/shop", text: t('footer.shopAll') },
+                { href: "/programs", text: t('footer.stemPrograms') },
+                { href: "/contact", text: t('footer.contactUs') },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -199,14 +201,14 @@ const Footer = () => {
                 color: 'var(--footer-text)',
               }}
             >
-              Programs
+              {t('footer.programs')}
             </h4>
             <ul className="space-y-2">
               {[
-                { href: "/programs", text: "STEM Clubs" },
-                { href: "/programs", text: "Academic Support" },
-                { href: "/programs", text: "Certifications" },
-                { href: "/programs", text: "Competitions" },
+                { href: "/programs", text: t('programs.list.stemClubs.title') },
+                { href: "/programs", text: t('programs.list.academicSupport.title') },
+                { href: "/programs", text: t('programs.list.teacherTraining.title') },
+                { href: "/programs", text: t('programs.list.summerCamps.title') },
               ].map((link, index) => (
                 <li key={`${link.text}-${index}`}>
                   <Link
@@ -308,13 +310,13 @@ const Footer = () => {
               color: 'var(--footer-text-muted)',
             }}
           >
-            © {new Date().getFullYear()} The STEM Park. All rights reserved.
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
           <div className="flex gap-6 text-sm">
             {[
-              { href: "#", text: "Privacy Policy" },
-              { href: "#", text: "Terms of Service" },
-              { href: "#", text: "Shipping" },
+              { href: "#", text: t('footer.privacyPolicy') },
+              { href: "#", text: t('footer.terms') },
+              { href: "#", text: t('footer.shipping') },
             ].map((link) => (
               <a
                 key={link.text}

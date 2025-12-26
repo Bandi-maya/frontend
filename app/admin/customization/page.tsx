@@ -28,6 +28,10 @@ import {
   Settings,
   Eye,
   Download,
+  Brush,
+  Layers,
+  Grid3x3,
+  Sparkles,
 } from "lucide-react";
 
 /* ---------- SOLID THEME CONFIG ---------- */
@@ -36,92 +40,151 @@ const solidThemes = [
     key: "red" as ThemeColor, 
     name: "Crimson",
     preview: "#EF4444",
+    darkPreview: "#DC2626",
+    lightPreview: "#FEE2E2",
   },
   { 
     key: "orange" as ThemeColor, 
     name: "Sunset",
     preview: "#F97316",
+    darkPreview: "#EA580C",
+    lightPreview: "#FFEDD5",
   },
   { 
     key: "green" as ThemeColor, 
     name: "Emerald",
     preview: "#22C55E",
+    darkPreview: "#16A34A",
+    lightPreview: "#DCFCE7",
   },
   { 
     key: "teal" as ThemeColor, 
     name: "Teal",
     preview: "#14B8A6",
+    darkPreview: "#0D9488",
+    lightPreview: "#CCFBF1",
   },
   { 
     key: "blue" as ThemeColor, 
     name: "Azure",
     preview: "#3B82F6",
+    darkPreview: "#2563EB",
+    lightPreview: "#DBEAFE",
   },
   { 
     key: "purple" as ThemeColor, 
     name: "Royal",
     preview: "#8B5CF6",
+    darkPreview: "#7C3AED",
+    lightPreview: "#F3E8FF",
   },
   { 
     key: "mono" as ThemeColor, 
     name: "Monochrome",
     preview: "#0F172A",
+    darkPreview: "#020617",
+    lightPreview: "#F1F5F9",
   },
 ];
 
-/* ---------- GRADIENT THEME CONFIG ---------- */
+// Function to get light gradient colors
+const getLightGradient = (color: ThemeColor) => {
+  const theme = solidThemes.find(t => t.key === color);
+  if (!theme) return ["#F1F5F9", "#E2E8F0", "#CBD5E1"];
+  
+  switch(color) {
+    case "red":
+      return ["#FEE2E2", "#FECACA", "#FCA5A5"];
+    case "orange":
+      return ["#FFEDD5", "#FED7AA", "#FDBA74"];
+    case "green":
+      return ["#DCFCE7", "#BBF7D0", "#86EFAC"];
+    case "teal":
+      return ["#CCFBF1", "#99F6E4", "#5EEAD4"];
+    case "blue":
+      return ["#DBEAFE", "#BFDBFE", "#93C5FD"];
+    case "purple":
+      return ["#F3E8FF", "#E9D5FF", "#D8B4FE"];
+    case "mono":
+    default:
+      return ["#F1F5F9", "#E2E8F0", "#CBD5E1"];
+  }
+};
+
+/* ---------- GRADIENT THEME CONFIG (Updated with Lighter Colors) ---------- */
 const gradientThemes = [
   { 
     key: "sunset" as GradientTheme, 
     name: "Sunset",
-    preview: "linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #8b5cf6 100%)"
+    preview: "linear-gradient(135deg, #FFEDD5 0%, #FED7AA 50%, #FDBA74 100%)",
+    color: "orange",
+    description: "Warm sunrise tones"
   },
   { 
     key: "ocean" as GradientTheme, 
     name: "Ocean",
-    preview: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #8b5cf6 100%)"
+    preview: "linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 50%, #93C5FD 100%)",
+    color: "blue",
+    description: "Cool ocean breeze"
   },
   { 
     key: "aurora" as GradientTheme, 
     name: "Aurora",
-    preview: "linear-gradient(135deg, #10b981 0%, #0ea5e9 50%, #8b5cf6 100%)"
+    preview: "linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 50%, #86EFAC 100%)",
+    color: "green",
+    description: "Natural green tones"
   },
   { 
     key: "fire" as GradientTheme, 
     name: "Fire",
-    preview: "linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #dc2626 100%)"
+    preview: "linear-gradient(135deg, #FEE2E2 0%, #FECACA 50%, #FCA5A5 100%)",
+    color: "red",
+    description: "Subtle red glow"
   },
   { 
     key: "forest" as GradientTheme, 
     name: "Forest",
-    preview: "linear-gradient(135deg, #10b981 0%, #059669 50%, #065f46 100%)"
+    preview: "linear-gradient(135deg, #DCFCE7 0%, #A7F3D0 50%, #6EE7B7 100%)",
+    color: "green",
+    description: "Deeper green tones"
   },
   { 
     key: "royal" as GradientTheme, 
     name: "Royal",
-    preview: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%)"
+    preview: "linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 50%, #D8B4FE 100%)",
+    color: "purple",
+    description: "Elegant purple shades"
   },
   { 
     key: "mono" as GradientTheme, 
     name: "Mono",
-    preview: "linear-gradient(135deg, #475569 0%, #334155 50%, #1e293b 100%)"
+    preview: "linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%)",
+    color: "mono",
+    description: "Clean monochrome"
+  },
+  { 
+    key: "teal" as GradientTheme, 
+    name: "Teal",
+    preview: "linear-gradient(135deg, #CCFBF1 0%, #99F6E4 50%, #5EEAD4 100%)",
+    color: "teal",
+    description: "Fresh teal colors"
   },
 ];
 
 /* ---------- TYPOGRAPHY OPTIONS ---------- */
 const fontOptions = [
-  { key: "inter", name: "Inter", value: "'Inter', ui-sans-serif, system-ui, sans-serif" },
-  { key: "mono", name: "JetBrains Mono", value: "'JetBrains Mono', ui-monospace, monospace" },
-  { key: "serif", name: "Georgia", value: "Georgia, serif" },
-  { key: "system", name: "System Default", value: "system-ui, -apple-system, sans-serif" },
+  { key: "inter", name: "Inter", value: "'Inter', ui-sans-serif, system-ui, sans-serif", preview: "Aa" },
+  { key: "mono", name: "JetBrains Mono", value: "'JetBrains Mono', ui-monospace, monospace", preview: "<>{}" },
+  { key: "serif", name: "Georgia", value: "Georgia, serif", preview: "Aa" },
+  { key: "system", name: "System Default", value: "system-ui, -apple-system, sans-serif", preview: "Aa" },
 ];
 
 /* ---------- PRESET THEMES ---------- */
 const presetThemes = [
   {
-    id: "modern-dark",
-    name: "Modern Dark",
-    description: "Dark theme with vibrant accent",
+    id: "modern-light",
+    name: "Modern Light",
+    description: "Light theme with subtle gradients",
     config: {
       color: "purple" as ThemeColor,
       gradient: "royal" as GradientTheme,
@@ -129,12 +192,13 @@ const presetThemes = [
       fontSizes: DEFAULT_THEME_CONFIG.fontSizes,
     },
     isPreset: true,
-    previewColors: ["#8B5CF6", "#F3E8FF", "#C4B5FD"]
+    previewColors: ["#F3E8FF", "#E9D5FF", "#D8B4FE"],
+    badge: "Popular"
   },
   {
-    id: "sunrise",
-    name: "Sunrise",
-    description: "Warm sunrise colors",
+    id: "sunrise-light",
+    name: "Sunrise Light",
+    description: "Warm sunrise with light gradients",
     config: {
       color: "orange" as ThemeColor,
       gradient: "sunset" as GradientTheme,
@@ -142,12 +206,12 @@ const presetThemes = [
       fontSizes: DEFAULT_THEME_CONFIG.fontSizes,
     },
     isPreset: true,
-    previewColors: ["#F97316", "#FFEDD5", "#FDBA74"]
+    previewColors: ["#FFEDD5", "#FED7AA", "#FDBA74"]
   },
   {
-    id: "ocean-breeze",
-    name: "Ocean Breeze",
-    description: "Cool ocean colors",
+    id: "ocean-light",
+    name: "Ocean Light",
+    description: "Cool ocean with light blue gradients",
     config: {
       color: "blue" as ThemeColor,
       gradient: "ocean" as GradientTheme,
@@ -155,12 +219,12 @@ const presetThemes = [
       fontSizes: DEFAULT_THEME_CONFIG.fontSizes,
     },
     isPreset: true,
-    previewColors: ["#3B82F6", "#DBEAFE", "#93C5FD"]
+    previewColors: ["#DBEAFE", "#BFDBFE", "#93C5FD"]
   },
   {
-    id: "forest-retreat",
-    name: "Forest Retreat",
-    description: "Natural green tones",
+    id: "forest-light",
+    name: "Forest Light",
+    description: "Natural green light gradients",
     config: {
       color: "green" as ThemeColor,
       gradient: "forest" as GradientTheme,
@@ -168,7 +232,20 @@ const presetThemes = [
       fontSizes: DEFAULT_THEME_CONFIG.fontSizes,
     },
     isPreset: true,
-    previewColors: ["#22C55E", "#DCFCE7", "#86EFAC"]
+    previewColors: ["#DCFCE7", "#A7F3D0", "#6EE7B7"]
+  },
+  {
+    id: "clean-mono",
+    name: "Clean Mono",
+    description: "Clean monochrome light theme",
+    config: {
+      color: "mono" as ThemeColor,
+      gradient: "mono" as GradientTheme,
+      font: "'Inter', ui-sans-serif, system-ui, sans-serif",
+      fontSizes: DEFAULT_THEME_CONFIG.fontSizes,
+    },
+    isPreset: true,
+    previewColors: ["#F8FAFC", "#F1F5F9", "#E2E8F0"]
   },
 ];
 
@@ -185,12 +262,17 @@ export default function ThemeCustomizationPage() {
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [fontSizePreview, setFontSizePreview] = useState("The quick brown fox jumps over the lazy dog.");
 
   // Load custom themes from localStorage on mount
   useEffect(() => {
     const savedThemes = localStorage.getItem("custom-themes");
     if (savedThemes) {
-      setCustomThemes(JSON.parse(savedThemes));
+      try {
+        setCustomThemes(JSON.parse(savedThemes));
+      } catch (error) {
+        console.error("Error loading custom themes:", error);
+      }
     }
   }, []);
 
@@ -258,6 +340,16 @@ export default function ThemeCustomizationPage() {
     }
     if (!draftTheme) return;
 
+    // Get matching colors for preview
+    const solidTheme = solidThemes.find(t => t.key === draftTheme.color);
+    const gradientTheme = gradientThemes.find(t => t.key === draftTheme.gradient);
+    
+    const previewColors = gradientTheme 
+      ? getGradientColors(gradientTheme.preview)
+      : solidTheme 
+        ? [solidTheme.lightPreview, solidTheme.preview, solidTheme.darkPreview]
+        : ["#F1F5F9", "#3B82F6", "#64748B"];
+
     const newTheme = {
       id: `custom-${Date.now()}`,
       name: themeName,
@@ -265,11 +357,8 @@ export default function ThemeCustomizationPage() {
       config: draftTheme,
       isPreset: false,
       createdAt: new Date().toISOString(),
-      previewColors: [
-        solidThemes.find(t => t.key === draftTheme.color)?.preview || "#000000",
-        "#F1F5F9",
-        "#94A3B8"
-      ]
+      previewColors,
+      matchesColor: gradientTheme?.color || draftTheme.color
     };
 
     const updatedThemes = [...customThemes, newTheme];
@@ -282,6 +371,12 @@ export default function ThemeCustomizationPage() {
     
     setDialog({ type: "success", message: `"${themeName}" saved as a custom theme!` });
     setTimeout(() => setDialog(null), 3000);
+  };
+
+  // Helper to extract colors from gradient
+  const getGradientColors = (gradient: string): string[] => {
+    const colorMatches = gradient.match(/#[0-9A-Fa-f]{6}|#[0-9A-Fa-f]{3}/g);
+    return colorMatches || ["#F1F5F9", "#94A3B8", "#475569"];
   };
 
   // Delete custom theme
@@ -338,15 +433,22 @@ export default function ThemeCustomizationPage() {
     setTimeout(() => setDialog(null), 3000);
   };
 
+  // Get gradient themes that match the selected color
+  const getMatchingGradients = (color: ThemeColor) => {
+    return gradientThemes.filter(g => g.color === color);
+  };
+
   if (themeLoading || !draftTheme) {
     return (
-      <div className="max-w-6xl mx-auto px-6 py-20">
-        <div className="animate-pulse">
-          <div className="h-8 bg-muted rounded w-64 mb-4"></div>
-          <div className="h-4 bg-muted rounded w-96 mb-12"></div>
-          <div className="grid grid-cols-5 gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="animate-pulse space-y-8">
+          <div className="space-y-4">
+            <div className="h-8 bg-muted rounded-lg w-64 max-w-full"></div>
+            <div className="h-4 bg-muted rounded-lg w-96 max-w-full"></div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-12 bg-muted rounded-full"></div>
+              <div key={i} className="h-12 bg-muted rounded-xl"></div>
             ))}
           </div>
         </div>
@@ -356,97 +458,172 @@ export default function ThemeCustomizationPage() {
 
   const { color: selectedColor, gradient: selectedGradient, font: selectedFontValue, fontSizes } = draftTheme;
   const selectedFontKey = fontOptions.find(f => f.value === selectedFontValue)?.key || 'inter';
+  const matchingGradients = getMatchingGradients(selectedColor);
+  const selectedSolidTheme = solidThemes.find(t => t.key === selectedColor);
+  const selectedGradientTheme = gradientThemes.find(t => t.key === selectedGradient);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-      <div className="mb-8 sm:mb-12">
-        <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Website Theme Customization</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">
-          Customize the appearance of your website. Changes are saved automatically.
-        </p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+      {/* Header */}
+      <div className="mb-8 sm:mb-12 lg:mb-16">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+              Theme Customization Studio
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground max-w-3xl">
+              Design and customize your website's appearance with precision. All changes are live-previewed and saved automatically.
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowPreview(!showPreview)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all ${
+                showPreview 
+                  ? 'border-primary bg-primary/10 text-primary' 
+                  : 'border-border hover:border-primary/40 hover:bg-secondary'
+              }`}
+            >
+              <Eye className="w-4 h-4" />
+              <span className="text-sm font-medium hidden sm:inline">
+                {showPreview ? 'Preview On' : 'Preview Off'}
+              </span>
+            </button>
+            
+            <button
+              onClick={handleExportTheme}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border hover:border-primary/40 hover:bg-secondary transition-colors"
+            >
+              <Download className="w-4 h-4" />
+              <span className="text-sm font-medium hidden sm:inline">Export</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Mode Navigation */}
+        <div className="relative">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
+            {[
+              { key: "select" as const, label: "Theme Gallery", icon: Grid3x3 },
+              { key: "color" as const, label: "Colors", icon: Palette },
+              { key: "gradient" as const, label: "Gradients", icon: Layers },
+              { key: "typography" as const, label: "Typography", icon: Type },
+              { key: "custom" as const, label: "Custom Builder", icon: Brush },
+            ].map(({ key, label, icon: Icon }) => (
+              <button
+                key={key}
+                onClick={() => {
+                  setMode(key);
+                  if (key === "select") {
+                    clearPreviewMode();
+                    setShowPreview(false);
+                  } else {
+                    setShowPreview(true);
+                  }
+                }}
+                className={`group flex items-center gap-2 px-4 sm:px-5 py-3 rounded-xl border transition-all duration-200 ${
+                  mode === key
+                    ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/10"
+                    : "border-border hover:border-primary/40 hover:bg-secondary hover:shadow-md"
+                }`}
+              >
+                <Icon className={`w-4 h-4 transition-transform ${mode === key ? 'scale-110' : ''}`} />
+                <span className="text-sm font-medium whitespace-nowrap">{label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Mode Select */}
-      <div className="flex flex-wrap gap-2 sm:gap-3 mb-8 sm:mb-14">
-        {[
-          { key: "select" as const, label: "Themes", icon: Palette },
-          { key: "color" as const, label: "Colors", icon: Palette },
-          { key: "gradient" as const, label: "Gradients", icon: Zap },
-          { key: "typography" as const, label: "Typography", icon: Type },
-          { key: "custom" as const, label: "Custom", icon: Settings },
-        ].map(({ key, label, icon: Icon }) => (
-          <button
-            key={key}
-            onClick={() => {
-              setMode(key);
-              if (key === "select") {
-                clearPreviewMode();
-                setShowPreview(false);
-              } else {
-                setShowPreview(true);
-              }
-            }}
-            className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full border text-sm sm:text-base transition font-medium
-              ${mode === key
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border hover:border-primary/40 hover:bg-secondary"}`}
-          >
-            <Icon className="w-4 h-4" />
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* Select Theme Mode */}
+      {/* Theme Gallery Mode */}
       {mode === "select" && (
-        <div className="space-y-8 sm:space-y-12">
+        <div className="space-y-12">
           {/* Preset Themes */}
           <div>
-            <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-4 sm:mb-6 flex items-center gap-2">
-              <Palette className="w-5 h-5" />
-              Preset Themes
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-foreground mb-2 flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                  </div>
+                  <span>Light Gradient Presets</span>
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Choose from our light gradient themes
+                </p>
+              </div>
+              <span className="text-xs font-medium px-3 py-1.5 rounded-full bg-secondary text-muted-foreground">
+                {presetThemes.length} presets
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {presetThemes.map((preset) => (
                 <motion.div
                   key={preset.id}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleLoadPreset(preset)}
-                  className={`relative p-4 sm:p-6 rounded-xl border-2 transition-all cursor-pointer group
-                    ${selectedPreset === preset.id
-                      ? "border-primary bg-primary/5 ring-2 ring-primary/20"
-                      : "border-border hover:border-primary/40"}`}
+                  className={`relative overflow-hidden rounded-2xl border-2 transition-all cursor-pointer group ${
+                    selectedPreset === preset.id
+                      ? "border-primary ring-4 ring-primary/10 bg-gradient-to-br from-primary/5 to-transparent"
+                      : "border-border hover:border-primary/40 bg-card"
+                  }`}
                 >
-                  <div className="flex items-start justify-between mb-3 sm:mb-4">
-                    <div>
-                      <h3 className="font-semibold text-base sm:text-lg">{preset.name}</h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground mt-1">{preset.description}</p>
+                  {preset.badge && (
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-primary text-primary-foreground">
+                        {preset.badge}
+                      </span>
                     </div>
-                    {selectedPreset === preset.id && (
-                      <Check className="w-5 h-5 text-primary" />
-                    )}
-                  </div>
+                  )}
                   
-                  <div className="flex gap-1 mb-3">
-                    {preset.previewColors.map((color, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 h-6 sm:h-8 rounded"
-                        style={{ background: color }}
+                  <div className="p-5">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="space-y-1">
+                        <h3 className="font-semibold text-lg">{preset.name}</h3>
+                        <p className="text-sm text-muted-foreground">{preset.description}</p>
+                      </div>
+                      {selectedPreset === preset.id && (
+                        <div className="p-1.5 rounded-full bg-primary text-primary-foreground">
+                          <Check className="w-4 h-4" />
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="mb-5 h-20 rounded-lg overflow-hidden">
+                      <div 
+                        className="w-full h-full transition-transform group-hover:scale-105"
+                        style={{ 
+                          background: preset.previewColors.length === 1 
+                            ? preset.previewColors[0]
+                            : `linear-gradient(135deg, ${preset.previewColors.join(', ')})`
+                        }}
                       />
-                    ))}
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApplyTheme(preset.config);
+                        }}
+                        className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors text-sm"
+                      >
+                        Apply Now
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLoadPreset(preset);
+                        }}
+                        className="px-3 py-2.5 rounded-lg border border-border hover:bg-secondary transition-colors text-sm"
+                      >
+                        Preview
+                      </button>
+                    </div>
                   </div>
-                  
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleApplyTheme(preset.config);
-                    }}
-                    className="mt-2 w-full py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition-colors text-sm"
-                  >
-                    Apply Theme
-                  </button>
                 </motion.div>
               ))}
             </div>
@@ -454,94 +631,104 @@ export default function ThemeCustomizationPage() {
 
           {/* Custom Themes */}
           <div>
-            <div className="flex items-center justify-between mb-4 sm:mb-6">
-              <h2 className="text-lg sm:text-xl font-semibold text-foreground flex items-center gap-2">
-                <Star className="w-5 h-5" />
-                Your Custom Themes
-              </h2>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-foreground mb-2 flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-secondary">
+                    <Star className="w-5 h-5" />
+                  </div>
+                  <span>Your Custom Themes</span>
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Manage and apply your saved custom themes
+                </p>
+              </div>
+              
               <button
                 onClick={() => setMode("custom")}
-                className="px-3 sm:px-4 py-2 rounded-lg border border-input hover:bg-hover transition-colors text-xs sm:text-sm"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
               >
-                Create New
+                <Brush className="w-4 h-4" />
+                <span className="text-sm">Create New</span>
               </button>
             </div>
             
             {customThemes.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 {customThemes.map((theme) => (
                   <motion.div
                     key={theme.id}
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ y: -4 }}
                     whileTap={{ scale: 0.98 }}
-                    className="relative p-4 sm:p-6 rounded-xl border border-border bg-card group"
+                    className="group relative overflow-hidden rounded-2xl border border-border bg-card hover:border-primary/40 transition-colors"
                   >
                     <button
                       onClick={() => handleDeleteCustomTheme(theme.id)}
-                      className="absolute top-2 right-2 sm:top-3 sm:right-3 p-1.5 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors opacity-0 group-hover:opacity-100"
+                      className="absolute top-3 right-3 z-10 p-1.5 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors opacity-0 group-hover:opacity-100"
                     >
-                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                     
-                    <div className="mb-3 sm:mb-4">
-                      <h3 className="font-semibold text-base sm:text-lg">{theme.name}</h3>
-                      {theme.description && (
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-1">{theme.description}</p>
-                      )}
-                      <p className="text-xs text-muted-foreground mt-2">
-                        Created: {new Date(theme.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    
-                    <div className="flex gap-1 mb-3">
-                      {theme.previewColors?.map((color: string, i: number) => (
-                        <div
-                          key={i}
-                          className="flex-1 h-6 rounded"
-                          style={{ background: color }}
+                    <div className="p-5">
+                      <div className="mb-4">
+                        <h3 className="font-semibold text-lg mb-1">{theme.name}</h3>
+                        {theme.description && (
+                          <p className="text-sm text-muted-foreground line-clamp-2">{theme.description}</p>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                          <Palette className="w-3 h-3" />
+                          {solidThemes.find(t => t.key === (theme.matchesColor || theme.config?.color))?.name || "Custom"}
+                        </p>
+                      </div>
+                      
+                      <div className="h-16 rounded-lg mb-5 overflow-hidden">
+                        <div 
+                          className="w-full h-full transition-transform group-hover:scale-105"
+                          style={{ 
+                            background: theme.previewColors?.length === 1 
+                              ? theme.previewColors[0]
+                              : `linear-gradient(135deg, ${theme.previewColors?.join(', ') || '#F1F5F9, #94A3B8, #475569'})`
+                          }}
                         />
-                      )) || (
-                        <>
-                          <div className="flex-1 h-6 rounded bg-primary"></div>
-                          <div className="flex-1 h-6 rounded bg-secondary"></div>
-                          <div className="flex-1 h-6 rounded bg-accent"></div>
-                        </>
-                      )}
-                    </div>
-                    
-                    <div className="flex gap-2 mt-3">
-                      <button
-                        onClick={() => handleApplyTheme(theme.config)}
-                        className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition-colors text-sm"
-                      >
-                        Apply
-                      </button>
-                      <button
-                        onClick={() => {
-                          setDraftTheme(theme.config);
-                          setMode("custom");
-                          setShowPreview(true);
-                        }}
-                        className="px-3 sm:px-4 py-2 rounded-lg border border-input hover:bg-hover transition-colors text-sm"
-                      >
-                        Edit
-                      </button>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleApplyTheme(theme.config)}
+                          className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors text-sm"
+                        >
+                          Apply
+                        </button>
+                        <button
+                          onClick={() => {
+                            setDraftTheme(theme.config);
+                            setMode("custom");
+                            setShowPreview(true);
+                          }}
+                          className="flex-1 py-2.5 rounded-lg border border-border hover:bg-secondary transition-colors text-sm"
+                        >
+                          Edit
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8 sm:py-12 border-2 border-dashed border-border rounded-xl">
-                <StarOff className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-3 sm:mb-4" />
-                <h3 className="text-base sm:text-lg font-semibold mb-2">No Custom Themes Yet</h3>
-                <p className="text-sm text-muted-foreground mb-4 sm:mb-6 max-w-md mx-auto">
-                  Create your first custom theme to save your preferred settings
+              <div className="text-center py-12 border-2 border-dashed border-border rounded-2xl">
+                <div className="inline-flex p-4 rounded-full bg-secondary mb-4">
+                  <StarOff className="w-8 h-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">No Custom Themes Yet</h3>
+                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                  Start by creating your first custom theme to save your preferred settings
                 </p>
                 <button
                   onClick={() => setMode("custom")}
-                  className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition-colors text-sm sm:text-base"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
                 >
-                  Create Custom Theme
+                  <Brush className="w-4 h-4" />
+                  Create Your First Theme
                 </button>
               </div>
             )}
@@ -551,82 +738,95 @@ export default function ThemeCustomizationPage() {
 
       {/* Color Selection Mode */}
       {mode === "color" && (
-        <div className="mb-8 sm:mb-16">
-          <div className="flex items-center justify-between mb-4 sm:mb-8">
-            <h2 className="text-lg sm:text-xl font-semibold text-foreground">Primary Color Scheme</h2>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowPreview(!showPreview)}
-                className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border text-sm ${showPreview ? 'border-primary text-primary' : 'border-border'}`}
-              >
-                <Eye className="w-4 h-4" />
-                {showPreview ? 'Hide Preview' : 'Show Preview'}
-              </button>
-              <button
-                onClick={() => setMode("select")}
-                className="px-3 sm:px-4 py-2 rounded-lg border border-input hover:bg-hover transition-colors text-sm"
-              >
-                Back to Themes
-              </button>
+        <div className="space-y-8">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
+              <Palette className="w-5 h-5 text-primary" />
+              <span>Primary Color Palette</span>
+            </h2>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
+              {solidThemes.map(({ key, name, preview, darkPreview, lightPreview }) => (
+                <motion.button
+                  key={key}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleUpdateDraft({ color: key })}
+                  className={`relative flex flex-col items-center gap-3 p-4 rounded-xl border transition-all overflow-hidden ${
+                    selectedColor === key
+                      ? 'border-primary ring-2 ring-primary/20 bg-gradient-to-br from-primary/5 to-transparent'
+                      : 'border-border hover:border-primary/40 hover:bg-secondary'
+                  }`}
+                >
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden border-4 border-background shadow-lg">
+                    <div className="absolute inset-0 flex flex-col">
+                      <div 
+                        className="flex-1"
+                        style={{ backgroundColor: darkPreview }}
+                      />
+                      <div 
+                        className="flex-1"
+                        style={{ backgroundColor: preview }}
+                      />
+                      <div 
+                        className="flex-1"
+                        style={{ backgroundColor: lightPreview }}
+                      />
+                    </div>
+                  </div>
+                  <span className="text-sm font-medium">{name}</span>
+                  {selectedColor === key && (
+                    <div className="absolute top-2 right-2 p-1 rounded-full bg-primary text-primary-foreground">
+                      <Check className="w-3 h-3" />
+                    </div>
+                  )}
+                </motion.button>
+              ))}
             </div>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-6">
-            {solidThemes.map(({ key, name, preview }) => (
-              <motion.button
-                key={key}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleUpdateDraft({ color: key })}
-                className={`flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl border transition-all
-                  ${selectedColor === key
-                    ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
-                    : 'border-border hover:border-primary/40'}`}
-              >
-                <div
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white shadow-lg"
-                  style={{ backgroundColor: preview }}
-                />
-                <span className="text-xs sm:text-sm font-medium">{name}</span>
-                {selectedColor === key && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
-              </motion.button>
-            ))}
-          </div>
-          
-          <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border">
-            <div className="flex flex-wrap gap-3 sm:gap-4">
-              <button
-                onClick={() => handleApplyTheme()}
-                disabled={isSaving}
-                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition-colors disabled:opacity-50 text-sm sm:text-base"
-              >
-                {isSaving ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
-                    Applying...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4" />
-                    Apply Color Scheme
-                  </>
-                )}
-              </button>
-              <button
-                onClick={() => setMode("gradient")}
-                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border border-input hover:bg-hover transition-colors text-sm sm:text-base"
-              >
-                <Zap className="w-4 h-4" />
-                Try Gradients
-              </button>
-              <button
-                onClick={handleReset}
-                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border border-input hover:bg-hover transition-colors text-sm sm:text-base"
-              >
-                <Undo className="w-4 h-4" />
-                Reset
-              </button>
+            
+            <div className="mt-8 pt-6 border-t border-border">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">
+                    Selected: {selectedSolidTheme?.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    This color will be applied as the primary brand color
+                  </p>
+                </div>
+                
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => setMode("gradient")}
+                    className="px-4 py-2.5 rounded-lg border border-border hover:bg-secondary transition-colors text-sm font-medium"
+                  >
+                    View Matching Gradients
+                  </button>
+                  <button
+                    onClick={handleReset}
+                    className="px-4 py-2.5 rounded-lg border border-border hover:bg-secondary transition-colors text-sm font-medium"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    onClick={() => handleApplyTheme()}
+                    disabled={isSaving}
+                    className="px-6 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm"
+                  >
+                    {isSaving ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+                        Applying...
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <Save className="w-4 h-4" />
+                        Apply Color
+                      </span>
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -634,77 +834,147 @@ export default function ThemeCustomizationPage() {
 
       {/* Gradient Selection Mode */}
       {mode === "gradient" && (
-        <div className="mb-8 sm:mb-16">
-          <div className="flex items-center justify-between mb-4 sm:mb-8">
-            <h2 className="text-lg sm:text-xl font-semibold text-foreground">Gradient Themes</h2>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowPreview(!showPreview)}
-                className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border text-sm ${showPreview ? 'border-primary text-primary' : 'border-border'}`}
-              >
-                <Eye className="w-4 h-4" />
-                {showPreview ? 'Hide Preview' : 'Show Preview'}
-              </button>
+        <div className="space-y-8">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-foreground mb-2 flex items-center gap-3">
+                  <Layers className="w-5 h-5 text-primary" />
+                  <span>Light Gradient Themes</span>
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Matching gradients for {selectedSolidTheme?.name}
+                </p>
+              </div>
               <button
                 onClick={() => setMode("color")}
-                className="px-3 sm:px-4 py-2 rounded-lg border border-input hover:bg-hover transition-colors text-sm"
+                className="px-4 py-2.5 rounded-lg border border-border hover:border-primary/40 hover:bg-secondary transition-colors text-sm font-medium"
               >
-                Back to Solid Colors
+                Change Color
               </button>
             </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            {gradientThemes.map(({ key, name, preview }) => (
-              <motion.button
-                key={key}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleUpdateDraft({ gradient: key })}
-                className={`relative p-4 sm:p-6 rounded-xl border-2 transition-all overflow-hidden
-                  ${selectedGradient === key
-                    ? 'border-primary ring-2 ring-primary/20'
-                    : 'border-border hover:border-primary/40'}`}
-              >
-                <div
-                  className="w-full h-20 sm:h-24 rounded-lg mb-3 sm:mb-4"
-                  style={{ background: preview }}
-                />
-                <div className="flex items-center justify-between">
-                  <span className="text-sm sm:text-base font-medium">{name}</span>
-                  {selectedGradient === key && (
-                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                  )}
+            
+            {/* Matching Gradients Section */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold mb-4">Matching Gradients</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {matchingGradients.map(({ key, name, preview, description }) => (
+                  <motion.button
+                    key={key}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleUpdateDraft({ gradient: key })}
+                    className={`relative p-5 rounded-xl border-2 transition-all overflow-hidden group ${
+                      selectedGradient === key
+                        ? 'border-primary ring-2 ring-primary/20'
+                        : 'border-border hover:border-primary/40'
+                    }`}
+                  >
+                    <div className="relative h-32 rounded-lg mb-4 overflow-hidden">
+                      <div
+                        className="absolute inset-0 transition-transform group-hover:scale-105"
+                        style={{ background: preview }}
+                      />
+                    </div>
+                    
+                    <div className="text-left">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium">{name}</span>
+                        {selectedGradient === key && (
+                          <div className="p-1.5 rounded-full bg-primary text-primary-foreground">
+                            <Check className="w-3 h-3" />
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">{description}</p>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+            
+            {/* All Gradients Section */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">All Gradient Themes</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {gradientThemes.map(({ key, name, preview, description, color }) => (
+                  <motion.button
+                    key={key}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleUpdateDraft({ gradient: key })}
+                    className={`relative p-5 rounded-xl border-2 transition-all overflow-hidden group ${
+                      selectedGradient === key
+                        ? 'border-primary ring-2 ring-primary/20'
+                        : 'border-border hover:border-primary/40'
+                    }`}
+                  >
+                    <div className="relative h-24 rounded-lg mb-4 overflow-hidden">
+                      <div
+                        className="absolute inset-0 transition-transform group-hover:scale-105"
+                        style={{ background: preview }}
+                      />
+                      <div className="absolute top-2 right-2">
+                        <div 
+                          className="w-6 h-6 rounded-full border-2 border-background shadow-sm"
+                          style={{ backgroundColor: solidThemes.find(t => t.key === color)?.preview }}
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="text-left">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium">{name}</span>
+                        {selectedGradient === key && (
+                          <div className="p-1.5 rounded-full bg-primary text-primary-foreground">
+                            <Check className="w-3 h-3" />
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">{description}</p>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+            
+            <div className="mt-8 pt-6 border-t border-border">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">
+                    Selected: {selectedGradientTheme?.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {selectedGradientTheme?.description}
+                  </p>
                 </div>
-              </motion.button>
-            ))}
-          </div>
-          
-          <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border">
-            <div className="flex flex-wrap gap-3 sm:gap-4">
-              <button
-                onClick={() => handleApplyTheme()}
-                disabled={isSaving}
-                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition-colors disabled:opacity-50 text-sm sm:text-base"
-              >
-                {isSaving ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
-                    Applying...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4" />
-                    Apply Gradient Theme
-                  </>
-                )}
-              </button>
-              <button
-                onClick={handleReset}
-                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border border-input hover:bg-hover transition-colors text-sm sm:text-base"
-              >
-                <Undo className="w-4 h-4" />
-                Reset
-              </button>
+                
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={handleReset}
+                    className="px-4 py-2.5 rounded-lg border border-border hover:bg-secondary transition-colors text-sm font-medium"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    onClick={() => handleApplyTheme()}
+                    disabled={isSaving}
+                    className="px-6 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm"
+                  >
+                    {isSaving ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+                        Applying...
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <Save className="w-4 h-4" />
+                        Apply Gradient
+                      </span>
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -712,121 +982,163 @@ export default function ThemeCustomizationPage() {
 
       {/* Typography Mode */}
       {mode === "typography" && (
-        <div className="mb-8 sm:mb-16">
-          <div className="flex items-center justify-between mb-4 sm:mb-8">
-            <h2 className="text-lg sm:text-xl font-semibold text-foreground">Typography Settings</h2>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowPreview(!showPreview)}
-                className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border text-sm ${showPreview ? 'border-primary text-primary' : 'border-border'}`}
-              >
-                <Eye className="w-4 h-4" />
-                {showPreview ? 'Hide Preview' : 'Show Preview'}
-              </button>
-              <button
-                onClick={() => setMode("select")}
-                className="px-3 sm:px-4 py-2 rounded-lg border border-input hover:bg-hover transition-colors text-sm"
-              >
-                Back to Themes
-              </button>
-            </div>
-          </div>
+        <div className="space-y-8">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
+              <Type className="w-5 h-5 text-primary" />
+              <span>Typography Settings</span>
+            </h2>
 
-          <div className="space-y-8 sm:space-y-12">
-            {/* Font Family */}
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Font Family</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                {fontOptions.map(({ key, name, value }) => (
-                  <motion.button
-                    key={key}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleUpdateDraft({ font: value })}
-                    className={`p-4 rounded-xl border transition-all text-left
-                      ${selectedFontKey === key
-                        ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
-                        : 'border-border hover:border-primary/40'}`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium">{name}</span>
-                      {selectedFontKey === key && (
-                        <Check className="w-4 h-4 text-primary" />
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground" style={{ fontFamily: value }}>
-                      The quick brown fox jumps over the lazy dog
-                    </p>
-                  </motion.button>
-                ))}
+            <div className="space-y-8">
+              {/* Font Family */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Font Family</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {fontOptions.map(({ key, name, value, preview }) => (
+                    <motion.button
+                      key={key}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleUpdateDraft({ font: value })}
+                      className={`p-4 rounded-xl border transition-all text-left min-h-[120px] ${
+                        selectedFontKey === key
+                          ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                          : 'border-border hover:border-primary/40 hover:bg-secondary'
+                      }`}
+                      style={{ fontFamily: value }}
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <div className="text-2xl font-bold mb-2">{preview}</div>
+                          <div className="text-sm font-medium">{name}</div>
+                        </div>
+                        {selectedFontKey === key && (
+                          <div className="p-1.5 rounded-full bg-primary text-primary-foreground">
+                            <Check className="w-3 h-3" />
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {fontSizePreview}
+                      </p>
+                    </motion.button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Font Sizes */}
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Font Sizes</h3>
-              <div className="space-y-4 sm:space-y-6">
-                {[
-                  { key: 'xs', label: 'Extra Small', min: 10, max: 14, step: 0.5 },
-                  { key: 'sm', label: 'Small', min: 12, max: 16, step: 0.5 },
-                  { key: 'base', label: 'Base', min: 14, max: 20, step: 0.5 },
-                  { key: 'lg', label: 'Large', min: 16, max: 24, step: 0.5 },
-                  { key: 'xl', label: 'Extra Large', min: 18, max: 32, step: 0.5 },
-                ].map(({ key, label, min, max, step }) => (
-                  <div key={key} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">{label}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {fontSizes[key as keyof typeof fontSizes]}px
-                      </span>
-                    </div>
+              {/* Font Sizes */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold">Font Sizes</h3>
+                  <div className="flex items-center gap-2">
                     <input
-                      type="range"
-                      min={min}
-                      max={max}
-                      step={step}
-                      value={fontSizes[key as keyof typeof fontSizes]}
-                      onChange={(e) => {
-                        const newFontSizes = {
-                          ...fontSizes,
-                          [key]: parseFloat(e.target.value)
-                        };
-                        handleUpdateDraft({ fontSizes: newFontSizes });
-                      }}
-                      className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary"
+                      type="text"
+                      value={fontSizePreview}
+                      onChange={(e) => setFontSizePreview(e.target.value)}
+                      placeholder="Type preview text..."
+                      className="px-3 py-1.5 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary max-w-[200px]"
                     />
                   </div>
-                ))}
+                </div>
+                
+                <div className="space-y-5">
+                  {[
+                    { key: 'xs', label: 'Extra Small', min: 10, max: 14, step: 0.5 },
+                    { key: 'sm', label: 'Small', min: 12, max: 16, step: 0.5 },
+                    { key: 'base', label: 'Base', min: 14, max: 20, step: 0.5 },
+                    { key: 'lg', label: 'Large', min: 16, max: 24, step: 0.5 },
+                    { key: 'xl', label: 'Extra Large', min: 18, max: 32, step: 0.5 },
+                  ].map(({ key, label, min, max, step }) => (
+                    <div key={key} className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-sm font-medium">{label}</span>
+                          <span className="text-xs text-muted-foreground ml-2">
+                            {fontSizes[key as keyof typeof fontSizes]}px
+                          </span>
+                        </div>
+                        <div 
+                          className="text-sm px-3 py-1 rounded-md bg-secondary"
+                          style={{ 
+                            fontSize: `${fontSizes[key as keyof typeof fontSizes]}px`,
+                            fontFamily: selectedFontValue
+                          }}
+                        >
+                          Aa
+                        </div>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="range"
+                          min={min}
+                          max={max}
+                          step={step}
+                          value={fontSizes[key as keyof typeof fontSizes]}
+                          onChange={(e) => {
+                            const newFontSizes = {
+                              ...fontSizes,
+                              [key]: parseFloat(e.target.value)
+                            };
+                            handleUpdateDraft({ fontSizes: newFontSizes });
+                          }}
+                          className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer 
+                            [&::-webkit-slider-thumb]:appearance-none 
+                            [&::-webkit-slider-thumb]:h-5 
+                            [&::-webkit-slider-thumb]:w-5 
+                            [&::-webkit-slider-thumb]:rounded-full 
+                            [&::-webkit-slider-thumb]:bg-primary
+                            [&::-webkit-slider-thumb]:border-2
+                            [&::-webkit-slider-thumb]:border-background
+                            [&::-webkit-slider-thumb]:shadow-lg"
+                        />
+                        <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                          <span>{min}px</span>
+                          <span>{max}px</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border">
-            <div className="flex flex-wrap gap-3 sm:gap-4">
-              <button
-                onClick={() => handleApplyTheme()}
-                disabled={isSaving}
-                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition-colors disabled:opacity-50 text-sm sm:text-base"
-              >
-                {isSaving ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
-                    Applying...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4" />
-                    Apply Typography
-                  </>
-                )}
-              </button>
-              <button
-                onClick={handleReset}
-                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border border-input hover:bg-hover transition-colors text-sm sm:text-base"
-              >
-                <Undo className="w-4 h-4" />
-                Reset to Default
-              </button>
+            <div className="mt-8 pt-6 border-t border-border">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">
+                    Font: {fontOptions.find(f => f.key === selectedFontKey)?.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Preview text updates in real-time
+                  </p>
+                </div>
+                
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={handleReset}
+                    className="px-4 py-2.5 rounded-lg border border-border hover:bg-secondary transition-colors text-sm font-medium"
+                  >
+                    Reset Defaults
+                  </button>
+                  <button
+                    onClick={() => handleApplyTheme()}
+                    disabled={isSaving}
+                    className="px-6 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm"
+                  >
+                    {isSaving ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+                        Applying...
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <Save className="w-4 h-4" />
+                        Apply Typography
+                      </span>
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -834,146 +1146,161 @@ export default function ThemeCustomizationPage() {
 
       {/* Custom Theme Mode */}
       {mode === "custom" && (
-        <div className="mb-8 sm:mb-16">
-          <div className="flex items-center justify-between mb-4 sm:mb-8">
-            <h2 className="text-lg sm:text-xl font-semibold text-foreground">Custom Theme Builder</h2>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowPreview(!showPreview)}
-                className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border text-sm ${showPreview ? 'border-primary text-primary' : 'border-border'}`}
-              >
-                <Eye className="w-4 h-4" />
-                {showPreview ? 'Hide Preview' : 'Show Preview'}
-              </button>
-              <button
-                onClick={() => setMode("select")}
-                className="px-3 sm:px-4 py-2 rounded-lg border border-input hover:bg-hover transition-colors text-sm"
-              >
-                Back to Themes
-              </button>
-            </div>
-          </div>
+        <div className="space-y-8">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
+              <Brush className="w-5 h-5 text-primary" />
+              <span>Custom Theme Builder</span>
+            </h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
-            {/* Color & Gradient Preview */}
-            <div className="lg:col-span-2 space-y-6 sm:space-y-8">
-              <div>
-                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Current Theme Preview</h3>
-                <div className="p-4 sm:p-6 rounded-xl border border-border bg-card space-y-4">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-12 h-12 rounded-lg"
-                      style={{ backgroundColor: solidThemes.find(t => t.key === selectedColor)?.preview || '#000' }}
-                    />
-                    <div>
-                      <h4 className="font-semibold">Solid Color</h4>
-                      <p className="text-sm text-muted-foreground">{solidThemes.find(t => t.key === selectedColor)?.name}</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Theme Preview */}
+              <div className="space-y-6">
+                <div className="p-5 rounded-xl border border-border bg-gradient-to-br from-secondary/30 to-transparent">
+                  <h3 className="font-semibold mb-4">Current Theme Preview</h3>
+                  
+                  <div className="space-y-4">
+                    {/* Color & Gradient Preview */}
+                    <div className="flex items-center gap-4 p-3 rounded-lg bg-background">
+                      <div className="relative">
+                        <div 
+                          className="w-12 h-12 rounded-lg"
+                          style={{ 
+                            background: selectedGradientTheme?.preview || 
+                            `linear-gradient(135deg, ${getLightGradient(selectedColor).join(', ')})`
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">Color & Gradient</div>
+                        <div className="text-sm text-muted-foreground">
+                          {selectedSolidTheme?.name} • {selectedGradientTheme?.name || "Custom Gradient"}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Font Preview */}
+                    <div className="flex items-center gap-4 p-3 rounded-lg bg-background">
+                      <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+                        <Type className="w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">Typography</div>
+                        <div 
+                          className="text-sm text-muted-foreground"
+                          style={{ fontFamily: selectedFontValue }}
+                        >
+                          {fontOptions.find(f => f.key === selectedFontKey)?.name}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-12 h-12 rounded-lg"
-                      style={{ background: gradientThemes.find(t => t.key === selectedGradient)?.preview }}
-                    />
-                    <div>
-                      <h4 className="font-semibold">Gradient</h4>
-                      <p className="text-sm text-muted-foreground">{gradientThemes.find(t => t.key === selectedGradient)?.name}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
-                      <Type className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold">Typography</h4>
-                      <p className="text-sm text-muted-foreground" style={{ fontFamily: selectedFontValue }}>
-                        {fontOptions.find(f => f.key === selectedFontKey)?.name}
+                  
+                  {/* Live Preview */}
+                  <div className="mt-6 p-4 rounded-lg bg-gradient-to-br from-secondary/20 to-transparent">
+                    <h4 className="text-sm font-medium mb-3">Live Preview</h4>
+                    <div 
+                      className="text-sm p-3 rounded-lg bg-background border border-border min-h-[100px]"
+                      style={{ fontFamily: selectedFontValue }}
+                    >
+                      <p style={{ fontSize: `${fontSizes.base}px` }} className="mb-2">
+                        This is how your text will appear with the current settings.
+                      </p>
+                      <p style={{ fontSize: `${fontSizes.sm}px` }} className="text-muted-foreground">
+                        The quick brown fox jumps over the lazy dog.
                       </p>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Quick Actions */}
-              <div>
-                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Quick Actions</h3>
+                {/* Quick Actions */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <button
                     onClick={() => setMode("color")}
-                    className="p-3 sm:p-4 rounded-lg border border-border hover:border-primary/40 transition-colors text-left"
+                    className="p-4 rounded-xl border border-border hover:border-primary/40 hover:bg-secondary transition-colors text-left group"
                   >
-                    <Palette className="w-5 h-5 mb-2" />
-                    <h4 className="font-medium mb-1">Change Colors</h4>
-                    <p className="text-xs text-muted-foreground">Switch solid color palette</p>
+                    <div className="p-2 rounded-lg bg-primary/10 w-fit mb-3 group-hover:scale-110 transition-transform">
+                      <Palette className="w-5 h-5 text-primary" />
+                    </div>
+                    <h4 className="font-medium mb-1">Colors</h4>
+                    <p className="text-xs text-muted-foreground">Change color palette</p>
                   </button>
+                  
                   <button
                     onClick={() => setMode("gradient")}
-                    className="p-3 sm:p-4 rounded-lg border border-border hover:border-primary/40 transition-colors text-left"
+                    className="p-4 rounded-xl border border-border hover:border-primary/40 hover:bg-secondary transition-colors text-left group"
                   >
-                    <Zap className="w-5 h-5 mb-2" />
-                    <h4 className="font-medium mb-1">Change Gradients</h4>
+                    <div className="p-2 rounded-lg bg-primary/10 w-fit mb-3 group-hover:scale-110 transition-transform">
+                      <Layers className="w-5 h-5 text-primary" />
+                    </div>
+                    <h4 className="font-medium mb-1">Gradients</h4>
                     <p className="text-xs text-muted-foreground">Apply gradient themes</p>
                   </button>
+                  
                   <button
                     onClick={() => setMode("typography")}
-                    className="p-3 sm:p-4 rounded-lg border border-border hover:border-primary/40 transition-colors text-left"
+                    className="p-4 rounded-xl border border-border hover:border-primary/40 hover:bg-secondary transition-colors text-left group"
                   >
-                    <Type className="w-5 h-5 mb-2" />
-                    <h4 className="font-medium mb-1">Change Fonts</h4>
-                    <p className="text-xs text-muted-foreground">Adjust typography settings</p>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Save & Actions */}
-            <div className="space-y-6 sm:space-y-8">
-              <div>
-                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Save Custom Theme</h3>
-                <div className="p-4 sm:p-6 rounded-xl border border-border bg-card space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Theme Name *</label>
-                    <input
-                      type="text"
-                      value={themeName}
-                      onChange={(e) => setThemeName(e.target.value)}
-                      placeholder="My Awesome Theme"
-                      className="w-full px-3 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Description (Optional)</label>
-                    <textarea
-                      value={themeDescription}
-                      onChange={(e) => setThemeDescription(e.target.value)}
-                      placeholder="Describe your theme..."
-                      rows={3}
-                      className="w-full px-3 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
-                    />
-                  </div>
-                  <button
-                    onClick={handleSaveCustomTheme}
-                    disabled={!themeName.trim()}
-                    className="w-full py-2 sm:py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-                  >
-                    <Save className="inline w-4 h-4 mr-2" />
-                    Save as Custom Theme
+                    <div className="p-2 rounded-lg bg-primary/10 w-fit mb-3 group-hover:scale-110 transition-transform">
+                      <Type className="w-5 h-5 text-primary" />
+                    </div>
+                    <h4 className="font-medium mb-1">Typography</h4>
+                    <p className="text-xs text-muted-foreground">Adjust font settings</p>
                   </button>
                 </div>
               </div>
 
-              <div>
-                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Theme Actions</h3>
+              {/* Right Column - Save & Actions */}
+              <div className="space-y-6">
+                {/* Save Theme */}
+                <div className="p-5 rounded-xl border border-border bg-gradient-to-br from-secondary/30 to-transparent">
+                  <h3 className="font-semibold mb-4">Save Custom Theme</h3>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Theme Name *</label>
+                      <input
+                        type="text"
+                        value={themeName}
+                        onChange={(e) => setThemeName(e.target.value)}
+                        placeholder="My Awesome Theme"
+                        className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Description (Optional)</label>
+                      <textarea
+                        value={themeDescription}
+                        onChange={(e) => setThemeDescription(e.target.value)}
+                        placeholder="Describe your theme..."
+                        rows={3}
+                        className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
+                      />
+                    </div>
+                    
+                    <button
+                      onClick={handleSaveCustomTheme}
+                      disabled={!themeName.trim()}
+                      className="w-full py-3.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      <Save className="w-4 h-4" />
+                      Save as Custom Theme
+                    </button>
+                  </div>
+                </div>
+
+                {/* Actions */}
                 <div className="space-y-3">
                   <button
                     onClick={() => handleApplyTheme()}
                     disabled={isSaving}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition-colors disabled:opacity-50 text-sm sm:text-base"
+                    className="w-full py-3.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     {isSaving ? (
                       <>
                         <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
-                        Applying...
+                        Applying Theme...
                       </>
                     ) : (
                       <>
@@ -982,20 +1309,24 @@ export default function ThemeCustomizationPage() {
                       </>
                     )}
                   </button>
-                  <button
-                    onClick={handleExportTheme}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-input hover:bg-hover transition-colors text-sm sm:text-base"
-                  >
-                    <Download className="w-4 h-4" />
-                    Export Theme
-                  </button>
-                  <button
-                    onClick={handleReset}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-input hover:bg-hover transition-colors text-sm sm:text-base"
-                  >
-                    <Undo className="w-4 h-4" />
-                    Reset to Default
-                  </button>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={handleExportTheme}
+                      className="py-3 rounded-lg border border-border hover:bg-secondary transition-colors flex items-center justify-center gap-2 text-sm"
+                    >
+                      <Download className="w-4 h-4" />
+                      Export
+                    </button>
+                    
+                    <button
+                      onClick={handleReset}
+                      className="py-3 rounded-lg border border-border hover:bg-secondary transition-colors flex items-center justify-center gap-2 text-sm"
+                    >
+                      <Undo className="w-4 h-4" />
+                      Reset
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1007,28 +1338,36 @@ export default function ThemeCustomizationPage() {
       <AnimatePresence>
         {dialog && (
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-50"
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-[calc(100%-2rem)]"
           >
-            <div className={`px-4 sm:px-6 py-3 rounded-lg shadow-lg border flex items-center gap-3 ${
+            <div className={`relative px-4 py-4 rounded-xl shadow-xl border-l-4 backdrop-blur-sm ${
               dialog.type === 'success' 
-                ? 'bg-green-50 text-green-800 border-green-200' 
-                : 'bg-red-50 text-red-800 border-red-200'
+                ? 'bg-green-50/95 border-green-500 text-green-800' 
+                : 'bg-red-50/95 border-red-500 text-red-800'
             }`}>
-              {dialog.type === 'success' ? (
-                <Check className="w-4 h-4 sm:w-5 sm:h-5" />
-              ) : (
-                <X className="w-4 h-4 sm:w-5 sm:h-5" />
-              )}
-              <span className="text-sm sm:text-base">{dialog.message}</span>
-              <button
-                onClick={() => setDialog(null)}
-                className="ml-2 text-current hover:opacity-70"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-start gap-3">
+                {dialog.type === 'success' ? (
+                  <div className="p-1 rounded-full bg-green-100">
+                    <Check className="w-4 h-4 text-green-600" />
+                  </div>
+                ) : (
+                  <div className="p-1 rounded-full bg-red-100">
+                    <X className="w-4 h-4 text-red-600" />
+                  </div>
+                )}
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{dialog.message}</p>
+                </div>
+                <button
+                  onClick={() => setDialog(null)}
+                  className="p-1 hover:opacity-70 transition-opacity"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

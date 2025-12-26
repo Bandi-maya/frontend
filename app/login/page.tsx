@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useI18n } from "@/contexts/I18nContext";
 
 /**
  * Updated Login component:
@@ -17,6 +18,7 @@ import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 const Login = () => {
   const { login, loading } = useUser();
   const router = useRouter();
+  const { t } = useI18n();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -85,7 +87,7 @@ const Login = () => {
               transition={{ delay: 0.1 }}
               className="text-2xl font-bold mb-6 text-center"
             >
-              Login
+              {t('login.title')}
             </motion.h1>
 
             {/* Error message */}
@@ -115,7 +117,7 @@ const Login = () => {
             >
               {/* Email */}
               <div className="space-y-1">
-                <label className="text-sm font-medium">Email</label>
+                <label className="text-sm font-medium">{t('login.email')}</label>
                 <div className="relative">
                   <Mail
                     className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
@@ -126,7 +128,7 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    placeholder="you@example.com"
+                    placeholder={t('login.placeholderEmail')}
                     className="w-full pl-10 pr-3 py-2 rounded-lg border outline-none transition-all"
                     style={{
                       background: "var(--background)",
@@ -144,7 +146,7 @@ const Login = () => {
 
               {/* Password */}
               <div className="space-y-1">
-                <label className="text-sm font-medium">Password</label>
+                <label className="text-sm font-medium">{t('login.password')}</label>
                 <div className="relative">
                   <Lock
                     className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
@@ -190,7 +192,7 @@ const Login = () => {
                     color: "var(--primary-foreground)",
                   }}
                 >
-                  {loading ? "Logging in..." : "Login"}
+                  {loading ? t('login.submitting') : t('login.submit')}
                 </Button>
               </motion.div>
             </motion.form>
@@ -199,13 +201,13 @@ const Login = () => {
               className="text-sm mt-5 text-center"
               style={{ color: "var(--muted-foreground)" }}
             >
-              Don’t have an account?{" "}
+              {t('login.noAccount')}{" "}
               <Link
                 href="/register"
                 className="font-medium"
                 style={{ color: "var(--primary)" }}
               >
-                Register
+                {t('login.register')}
               </Link>
             </p>
           </motion.div>

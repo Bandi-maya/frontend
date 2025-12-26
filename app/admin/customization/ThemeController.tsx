@@ -1,6 +1,11 @@
-"use client"
-import { useEffect, useState } from 'react';
+"use client";
 
+import { useEffect, useState, useCallback } from 'react';
+import Cookies from 'js-cookie';
+
+/**
+ * Standard default theme values
+ */
 export const defaultTheme = {
   colors: {
     primary: {
@@ -55,68 +60,44 @@ export const defaultTheme = {
 export default function ThemeController() {
   const [theme, setTheme] = useState(defaultTheme);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('app-theme');
-    if (saved) {
-      try {
-        setTheme({ ...defaultTheme, ...JSON.parse(saved) });
-      } catch (e) {
-        console.error("Failed to parse theme", e);
-      }
-    }
-
-    // Listen for theme changes from other tabs/components
-    const handleStorage = () => {
-        const saved = localStorage.getItem('app-theme');
-        if (saved) setTheme({ ...defaultTheme, ...JSON.parse(saved) });
-    };
-    window.addEventListener('storage', handleStorage);
-    window.addEventListener('theme-change', handleStorage);
-    return () => {
-        window.removeEventListener('storage', handleStorage);
-        window.removeEventListener('theme-change', handleStorage);
-    }
-  }, []);
-
-  useEffect(() => {
+  const applyThemeToDOM = useCallback((currentTheme: typeof defaultTheme) => {
     const root = document.documentElement;
     let cssVariables = '';
 
     const setVar = (name: string, value: string) => {
       root.style.setProperty(name, value);
-      cssVariables += `${name}: ${value};`;
+      cssVariables += `${name}: ${value}; `;
     };
 
-    // Colors
-    Object.entries(theme.colors).forEach(([key, shades]: [string, any]) => {
+    // 1. Map Colors to CSS Variables
+    Object.entries(currentTheme.colors).forEach(([key, shades]: [string, any]) => {
       if (typeof shades === 'string') {
-         setVar(`--${key}`, shades);
+        setVar(`--${key}`, shades);
       } else {
         Object.entries(shades).forEach(([shade, value]: [string, any]) => {
-          if (shade === 'DEFAULT') setVar(`--${key}`, value);
-          else setVar(`--${key}-${shade}`, value);
+          const varName = shade === 'DEFAULT' ? `--${key}` : `--${key}-${shade}`;
+          setVar(varName, value);
         });
       }
     });
 
-    // Gradients
-    Object.entries(theme.gradients).forEach(([key, value]) => {
+    // 2. Map Gradients
+    Object.entries(currentTheme.gradients).forEach(([key, value]) => {
       setVar(`--gradient-${key}`, value as string);
     });
 
-    // Fonts
-    Object.entries(theme.fonts).forEach(([key, value]) => {
+    // 3. Map Fonts
+    Object.entries(currentTheme.fonts).forEach(([key, value]) => {
       setVar(`--font-${key}`, value as string);
     });
 
-    // Inject global overrides for common Tailwind classes to ensure theme applies everywhere
-    // even if components use hardcoded utility classes like bg-primary
-    const styleId = 'theme-overrides';
-    let styleEl = document.getElementById(styleId);
+    // 4. Inject Dynamic Style Tag for Tailwind Utility Overrides
+    const styleId = 'theme-permanent-overrides';
+    let styleEl = document.getElementById(styleId) as HTMLStyleElement;
     if (!styleEl) {
-        styleEl = document.createElement('style');
-        styleEl.id = styleId;
-        document.head.appendChild(styleEl);
+      styleEl = document.createElement('style');
+      styleEl.id = styleId;
+      document.head.appendChild(styleEl);
     }
 
     styleEl.innerHTML = `
@@ -129,8 +110,41 @@ export default function ThemeController() {
       .font-display { font-family: var(--font-display) !important; }
       .font-sans { font-family: var(--font-sans) !important; }
     `;
+  }, []);
 
-  }, [theme]);
+  const loadAndApply = useCallback(() => {
+    // Priority: Cookies (Permanent/Server-Synced) -> LocalStorage -> Default
+    const cookieData = Cookies.get('app-theme-config');
+    const localData = localStorage.getItem('app-theme');
+    const saved = cookieData || localData;
+
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        const mergedTheme = { ...defaultTheme, ...parsed };
+        setTheme(mergedTheme);
+        applyThemeToDOM(mergedTheme);
+      } catch (e) {
+        console.error("Theme Load Error:", e);
+      }
+    } else {
+      applyThemeToDOM(defaultTheme);
+    }
+  }, [applyThemeToDOM]);
+
+  useEffect(() => {
+    // Initial Load
+    loadAndApply();
+
+    // Listen for cross-tab changes or manual theme trigger events
+    window.addEventListener('storage', loadAndApply);
+    window.addEventListener('theme-change', loadAndApply);
+
+    return () => {
+      window.removeEventListener('storage', loadAndApply);
+      window.removeEventListener('theme-change', loadAndApply);
+    };
+  }, [loadAndApply]);
 
   return null;
 }

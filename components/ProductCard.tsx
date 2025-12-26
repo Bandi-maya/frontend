@@ -10,6 +10,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { useState } from "react"
+import { useI18n } from "@/contexts/I18nContext";
 
 export default function ProductCard({ product, index = 0 }: any) {
   const { addToCart } = useCart()
@@ -17,6 +18,7 @@ export default function ProductCard({ product, index = 0 }: any) {
   const { currencyCode } = useSettings()
   const [isHovering, setIsHovering] = useState(false)
   const hasVariants = product.variants && product.variants.length > 0
+  const { t } = useI18n();
 
   // 1. Determine Display Media
   const displayMedia = (product.media && product.media.length > 0)
@@ -70,8 +72,8 @@ export default function ProductCard({ product, index = 0 }: any) {
     }, 1)
 
     toast({
-      title: "Added to cart!",
-      description: `${product.name} added.`,
+      title: t('product.addedTitle'),
+      description: t('product.addedDesc', { name: product.name }),
       className: "bg-gradient-to-r from-emerald-500 to-teal-600 text-white",
     })
   }
@@ -186,7 +188,7 @@ export default function ProductCard({ product, index = 0 }: any) {
                     '--variant-shadow': 'hsl(var(--indigo) / 0.3)',
                   } as React.CSSProperties}
                 >
-                  Multi-Option
+                  {t('product.multiOption')}
                 </motion.span>
               )}
             </div>
@@ -306,7 +308,7 @@ export default function ProductCard({ product, index = 0 }: any) {
                     style={{ '--from-text': 'hsl(var(--muted-foreground))' } as React.CSSProperties}
                     animate={isHovering ? { opacity: 0.8 } : { opacity: 0.6 }}
                   >
-                    From
+                    {t('product.from')}
                   </motion.span>
                 )}
                 
@@ -352,7 +354,7 @@ export default function ProductCard({ product, index = 0 }: any) {
               >
                 <p className="text-[8px] font-black text-[var(--shipping-label)] uppercase"
                    style={{ '--shipping-label': 'hsl(var(--muted-foreground))' } as React.CSSProperties}>
-                  Shipping to
+                  {t('product.shippingTo')}
                 </p>
                 <motion.div
                   className="flex items-center gap-1 justify-end"

@@ -1,5 +1,6 @@
 "use client"
 import { ArrowRight, Calendar, Users, BookOpen, Trophy, Sparkles, Target, Zap, Shield, TrendingUp, Clock, Star, CheckCircle } from "lucide-react";
+import { useI18n } from "@/contexts/I18nContext";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/axios";
@@ -20,6 +21,8 @@ const STEM_IMAGES = [
 ];
 
 const tempMainPrograms = [
+
+    // NOTE: translations for UI chrome (buttons/labels) use useI18n in the component body
     {
         _id: "1",
         title: "Robotics & Automation Engineering",
@@ -72,6 +75,7 @@ const Programs = () => {
     const [additionalPrograms, setAdditionalPrograms] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [useTempData, setUseTempData] = useState(false);
+    const { t } = useI18n();
 
     useEffect(() => {
         async function fetchData() {
@@ -372,7 +376,7 @@ const Programs = () => {
 
                                                 <div className="flex flex-wrap gap-4">
                                                     <Button size="lg" className="rounded-lg px-8 py-6 font-semibold shadow-lg hover:shadow-xl transition-all">
-                                                        Enroll Now <ArrowRight className="ml-2 w-5 h-5" />
+                                                        {t('programs.buttons.enrollNow')} <ArrowRight className="ml-2 w-5 h-5" />
                                                     </Button>
                                                     <Button variant="outline" size="lg" className="rounded-lg px-8 py-6 font-semibold border-2">
                                                         Download Syllabus
@@ -399,13 +403,13 @@ const Programs = () => {
                         className="text-center mb-16"
                     >
                         <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary mb-6">
-                            <span className="text-sm font-semibold text-primary">SPECIALIZED TRACKS</span>
+                            <span className="text-sm font-semibold text-primary">{t('programs.page.specializedTracks')}</span>
                         </motion.div>
                         <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-                            Focused Learning Paths
+                            {t('programs.page.focusedTitle')}
                         </motion.h2>
                         <motion.p variants={fadeInUp} className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                            Master specific technologies with our intensive focused programs
+                            {t('programs.page.focusedDescription')}
                         </motion.p>
                     </motion.div>
 
@@ -442,7 +446,7 @@ const Programs = () => {
                                                 variant="ghost" 
                                                 className="w-full justify-between px-0 hover:bg-transparent group-hover:text-primary"
                                             >
-                                                <span className="font-medium">Explore Program</span>
+                                                <span className="font-medium">{t('programs.buttons.exploreProgram')}</span>
                                                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                             </Button>
                                         </div>
@@ -477,12 +481,11 @@ const Programs = () => {
                             <div className="relative z-10 text-center">
                                 <motion.div variants={fadeInUp}>
                                     <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                                        Ready to Launch Your STEM Career?
+                                        {t('programs.page.cta.title')}
                                     </h2>
                                     
                                     <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
-                                        Join our community of innovators and take the first step toward a future in technology. 
-                                        Our advisors are ready to help you choose the perfect program.
+                                        {t('programs.page.cta.description')}
                                     </p>
                                 </motion.div>
                                 
@@ -491,10 +494,10 @@ const Programs = () => {
                                     className="flex flex-col sm:flex-row gap-4 justify-center"
                                 >
                                     <Button size="lg" className="rounded-lg px-10 py-7 text-base font-semibold shadow-lg hover:shadow-xl transition-all">
-                                        Schedule Free Consultation <ArrowRight className="ml-2 w-5 h-5" />
+                                        {t('programs.page.cta.schedule')} <ArrowRight className="ml-2 w-5 h-5" />
                                     </Button>
                                     <Button variant="outline" size="lg" className="rounded-lg px-10 py-7 text-base font-semibold border-2">
-                                        View All Programs
+                                        {t('programs.page.cta.viewAll')}
                                     </Button>
                                 </motion.div>
                                 
@@ -503,7 +506,7 @@ const Programs = () => {
                                     className="mt-10 pt-8 border-t border-border"
                                 >
                                     <p className="text-sm text-muted-foreground">
-                                        Limited spots available • Next cohort starts in 2 weeks
+                                        {t('programs.page.cta.note')}
                                     </p>
                                 </motion.div>
                             </div>

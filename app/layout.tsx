@@ -1,6 +1,5 @@
 import "./globals.css";
 import MainLayout from "./MainLayout";
-import Providers from "./providers";
 
 export const metadata = {
   title: "My E-commerce Store | Buy Online",
@@ -22,9 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>
-          <MainLayout>{children}</MainLayout>
-        </Providers>
+        <MainLayout>{children}</MainLayout>
       </body>
     </html>
   );

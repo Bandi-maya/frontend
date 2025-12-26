@@ -8,6 +8,8 @@ export interface User {
   name: string;
   email: string;
   token: string;
+  avatar?: string;  // Added optional avatar property
+  role?: string;    // Added optional role property
 }
 
 interface UserContextType {
@@ -23,21 +25,27 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser]: any = useState<User | null>(null);
-  const [loading, setLoading] = useState(true); // Start with loading true
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load user from localStorage on initial client-side render
     try {
       const stored = localStorage.getItem("user");
       if (stored) {
-        setUser(JSON.parse(stored));
+        const parsedUser = JSON.parse(stored);
+        // Ensure the user has avatar and role properties with defaults
+        const userWithDefaults: User = {
+          ...parsedUser,
+          avatar: parsedUser.avatar || undefined,
+          role: parsedUser.role || "user"
+        };
+        setUser(userWithDefaults);
       }
     } catch (error) {
       console.error("Failed to parse user from localStorage", error);
       localStorage.removeItem("user");
     } finally {
-      setLoading(false); // Stop loading after attempting to load from storage
+      setLoading(false);
     }
   }, []);
 
@@ -57,7 +65,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         method: "POST",
         data: { email, password },
       });
-      const loggedUser: User = { ...res.user, token: res.token };
+      const loggedUser: User = { 
+        ...res.user, 
+        token: res.token,
+        avatar: res.user.avatar || undefined,
+        role: res.user.role || "user"
+      };
       setUser(loggedUser);
     } catch (err: any) {
       throw new Error(err.message || "Login failed");
@@ -95,7 +108,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     });
 
     if (response.user) {
-      const loggedUser: User = { ...response.user, token: user.token };
+      const loggedUser: User = { 
+        ...response.user, 
+        token: user?.token || "",
+        avatar: response.user.avatar || user?.avatar,
+        role: response.user.role || user?.role || "user"
+      };
       setUser(loggedUser);
     }
   };
@@ -104,9 +122,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     if (!user?.token) return;
     setLoading(true);
     try {
-      const res = await apiFetch(`/auth/me`, {
+      const res = await apiFetch(`/auth/me`, {});
+      setUser({ 
+        ...res.user, 
+        token: user.token,
+        avatar: res.user.avatar || user.avatar,
+        role: res.user.role || user.role || "user"
       });
-      setUser({ ...res.user, token: user.token });
     } catch (err) {
       console.error(err);
       logout();
