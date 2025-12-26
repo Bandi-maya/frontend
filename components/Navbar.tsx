@@ -223,8 +223,8 @@ const Navbar = ({ onLanguageToggle }: NavbarProps) => {
         ref={navRef}
         className={`fixed top-0 left-0 right-0 w-screen overflow-visible z-[60] transition-all duration-300 ${
           scrolled
-            ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-md"
-            : "bg-white border-b border-gray-100"
+            ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-lg shadow-black/20"
+            : "bg-white border-b border-gray-100 shadow-md shadow-black/10"
         }`}
       >
         <div className="container mx-auto px-4">
@@ -484,6 +484,9 @@ const Navbar = ({ onLanguageToggle }: NavbarProps) => {
           </div>
         </div>
       </nav>
+
+      {/* Spacer to prevent content overlap with fixed navbar + 10px gap */}
+      <div className="h-16 md:h-20 box-content pb-[10px]" />
 
       <style jsx global>{`
         @keyframes fadeIn {
