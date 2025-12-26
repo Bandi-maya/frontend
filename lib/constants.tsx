@@ -1,4 +1,4 @@
-export const apiUrl = "/api";
+export const apiUrl = "https://ecom-backend.logybyte.in";
 
 
 export const CURRENCY_OPTIONS = [
