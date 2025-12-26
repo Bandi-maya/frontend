@@ -1,4 +1,5 @@
 import Head from "next/head";
+import LocalizedHead from "@/components/LocalizedHead";
 
 export default function HomePage() {
   return (
@@ -11,9 +12,8 @@ export default function HomePage() {
         <link rel="canonical" href="https://www.example.com/" />
       </Head>
 
-      <main>
-        <h1>Welcome to My Store</h1>
-      </main>
+      {/* Localized client-side head & visible H1 for accessibility */}
+      <LocalizedHead />
     </>
   );
 }

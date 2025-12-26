@@ -1,6 +1,7 @@
 // app/product/[slug]/page.tsx
 import { fetchProduct } from "@/lib/Products";
 import ProductDetailClient from "./ProductDetailClient";
+import NotFoundClient from "./NotFoundClient";
 
 export async function generateMetadata({ params }:
     {
@@ -37,7 +38,7 @@ export default async function Page({
     const product = await fetchProduct(slug);
 
     if (!product) {
-        return <div>Product not found</div>;
+        return <NotFoundClient />;
     }
 
     return (

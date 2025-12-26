@@ -9,8 +9,10 @@ import { cn } from "@/lib/utils"; // Assuming you have a utility for class mergi
 import { useSettings } from "@/contexts/SettingsContext";
 import Link from "next/link";
 import { apiUrl } from "@/lib/constants";
+import { useI18n } from "@/contexts/I18nContext";
 
 const ProductDetailClient = ({ product }: any) => {
+    const { t } = useI18n();
     const { addToCart } = useCart();
 
     const [quantity, setQuantity] = useState(1);
@@ -109,7 +111,7 @@ const ProductDetailClient = ({ product }: any) => {
         }
     }, [product, selectedVariant]);
 
-    if (!product) return <div className="text-center py-20">Product not found</div>;
+    if (!product) return <div className="text-center py-20">{t('products.not_found')}</div>; 
 
     // // Pricing & Stock display logic
     // const displayPrice = selectedVariant
@@ -127,8 +129,8 @@ const ProductDetailClient = ({ product }: any) => {
         // Assuming 'selectedVariant' is the leaf node from your variant tree selection
         if (!selectedVariant && product.variants?.length > 0) {
             return toast({
-                title: "Selection required",
-                description: "Please select all options before adding to cart.",
+                title: t('message.selection_required_title'),
+                description: t('message.selection_required_desc'),
                 variant: "destructive",
             });
         }
@@ -148,8 +150,8 @@ const ProductDetailClient = ({ product }: any) => {
         );
 
         toast({
-            title: "Added to cart!",
-            description: `${product.name} ${selectedVariant ? `(${Object.values(selectedVariant.attributes).join(' / ')})` : ''} added to your cart.`,
+            title: t('message.added_to_cart_title'),
+            description: t('message.added_to_cart_desc', { name: product.name, attrs: selectedVariant ? `(${Object.values(selectedVariant.attributes).join(' / ')})` : '' }),
         });
     };
 
@@ -157,7 +159,7 @@ const ProductDetailClient = ({ product }: any) => {
         <div className="min-h-screen bg-background">
             <div className="container mx-auto px-4 py-12">
                 <Link href="/shop" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-8">
-                    <ArrowLeft className="w-4 h-4" /> Back to Shop
+                    <ArrowLeft className="w-4 h-4" /> {t('products.back_to_shop')}
                 </Link>
 
                 <div className="grid lg:grid-cols-2 gap-12">
@@ -290,7 +292,7 @@ const ProductDetailClient = ({ product }: any) => {
 
                         <div className="space-y-1 text-sm">
                             <p className={cn("font-medium", displayStock > 0 ? "text-green-600" : "text-red-500")}>
-                                {displayStock > 0 ? `In Stock (${displayStock} available)` : "Out of Stock"}
+                                {displayStock > 0 ? t('products.in_stock_with_count', { count: displayStock }) : t('products.out_of_stock')}
                             </p>
                             <p className="text-muted-foreground">SKU: {selectedVariant?.sku || product.productData?.sku}</p>
                         </div>
@@ -309,14 +311,14 @@ const ProductDetailClient = ({ product }: any) => {
                                 disabled={displayStock <= 0}
                                 onClick={handleAddToCart}
                             >
-                                <ShoppingCart className="w-5 h-5" /> Add to Cart
+                                <ShoppingCart className="w-5 h-5" /> {t('products.add_to_cart')}
                             </Button>
                         </div>
 
                         <div className="grid grid-cols-3 gap-4 pt-6 border-t">
-                            <TrustBadge icon={Truck} title="Fast Delivery" subtitle="Global shipping" />
-                            <TrustBadge icon={Shield} title="Secure" subtitle="SSL Protection" />
-                            <TrustBadge icon={RotateCcw} title="Returns" subtitle="30 Day Policy" />
+                            <TrustBadge icon={Truck} title={t('trust.fastDelivery.title')} subtitle={t('trust.fastDelivery.subtitle')} />
+                            <TrustBadge icon={Shield} title={t('trust.secure.title')} subtitle={t('trust.secure.subtitle')} />
+                            <TrustBadge icon={RotateCcw} title={t('trust.returns.title')} subtitle={t('trust.returns.subtitle')} />
                         </div>
                     </div>
                 </div>

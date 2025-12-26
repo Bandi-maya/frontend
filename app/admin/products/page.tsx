@@ -2,9 +2,11 @@
 import { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { apiUrl, CURRENCY_OPTIONS } from "@/lib/constants";
+import { useI18n } from "@/contexts/I18nContext";
 import { apiFetch } from "@/lib/axios";
 
 const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, levelLabels, setForm, deleteNodeDeep }: any) => {
+  const { t } = useI18n();
   const handleLabelChange = (newLabel: any) => {
     setForm((prev: any) => {
       const updatedLabels = [...prev.levelLabels];
@@ -49,8 +51,8 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
       {nodes?.length > 0 && (
         <div className="bg-[var(--primary-50)] p-2 rounded-md border border-[var(--primary-100)] flex items-center gap-4 mb-2">
           <label className="text-[10px] font-black text-[var(--primary-500)] uppercase tracking-widest whitespace-nowrap">
-            Level {depth} Category Name:
-          </label>
+            {t('admin.variant.level_name', { depth })}
+          </label> 
           <input
             placeholder="e.g. Color, Size, or Fabric"
             className="flex-1 bg-transparent border-b border-[var(--primary-200)] focus:border-[var(--primary-500)] outline-none text-sm font-bold text-[var(--primary-700)]"
@@ -67,7 +69,9 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
           <div key={node.id} className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm">
             <div className="flex flex-col md:flex-row gap-4 mb-4 bg-[var(--neutral-50)] p-3 rounded-lg">
               <div className="flex-[2]">
-                <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase tracking-widest">{node.levelLabel || `Level ${depth}`} Value</label>
+                <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase tracking-widest">
+                  {node.levelLabel || t('admin.variant.level_default', { depth })} {t('admin.variant.value')}
+                </label>
                 <input
                   placeholder={`e.g. ${depth === 1 ? 'Red' : depth === 2 ? 'Large' : 'Cotton'}`}
                   className="w-full bg-transparent font-bold border-b border-[var(--neutral-300)] focus:border-[var(--primary-500)] outline-none pb-1 text-lg text-[var(--foreground)]"
@@ -78,13 +82,13 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
               <button
                 type="button"
                 onClick={() => {
-                  if (confirm(`Delete variant "${node.name || 'Unnamed'}"?`)) {
+                  if (confirm(t('admin.variant.delete_confirm', { name: node.name || t('admin.variant.unnamed') }))) {
                     deleteNodeDeep(currentPath);
                   }
                 }}
                 className="text-[10px] font-bold text-[var(--destructive-500)] uppercase hover:text-[var(--destructive-700)]"
               >
-                Delete
+                {t('common.delete')}
               </button>
 
             </div>
@@ -94,7 +98,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                 {/* Identification Row */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">SKU (Required)</label>
+                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">{t('admin.field.sku_required')}</label>
                     <input
                       placeholder="SKU-12345"
                       className="w-full p-2 border border-[var(--input)] rounded text-sm font-mono bg-[var(--background)] focus:ring-2 focus:ring-[var(--primary-500)] outline-none text-[var(--foreground)]"
@@ -104,7 +108,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">Barcode</label>
+                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">{t('admin.field.barcode')}</label>
                     <input
                       placeholder="EAN/UPC"
                       className="w-full p-2 border border-[var(--input)] rounded text-sm bg-[var(--background)] outline-none text-[var(--foreground)]"
@@ -113,7 +117,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">Weight (kg)</label>
+                    <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase">{t('admin.field.weight_kg')}</label>
                     <input
                       type="number"
                       placeholder="0.00"
@@ -127,10 +131,10 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                 <div className="space-y-3 pt-4 border-t border-[var(--neutral-200)]">
                   <div className="flex items-center justify-between">
                     <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase tracking-wider">
-                      Variant Market Pricing
+                      {t('admin.variant.market_pricing')}
                     </label>
                     <div className="bg-[var(--neutral-50)] p-4 rounded-lg border border-dashed border-[var(--neutral-300)]">
-                      <label className="text-xs font-bold text-[var(--neutral-500)] uppercase block mb-2">Add New Market / Currency</label>
+                      <label className="text-xs font-bold text-[var(--neutral-500)] uppercase block mb-2">{t('admin.variant.add_market')}</label>
                       <select
                         value=""
                         onChange={(e) => {
@@ -148,7 +152,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                         }}
                         className="w-full md:w-64 border-[var(--neutral-300)] rounded-lg border p-2 text-sm bg-[var(--background)] focus:ring-2 focus:ring-[var(--primary-500)] outline-none text-[var(--foreground)]"
                       >
-                        <option value="" disabled>+ Select currency to add market</option>
+                        <option value="" disabled>{t('admin.variant.select_currency')}</option>
                         {CURRENCY_OPTIONS.map((curr: any) => (
                           <option
                             key={curr.code}
@@ -184,7 +188,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
 
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div>
-                              <label className="text-[8px] font-black text-[var(--neutral-400)] uppercase">Currency</label>
+                              <label className="text-[8px] font-black text-[var(--neutral-400)] uppercase">{t('admin.field.currency')}</label>
                               <select
                                 value={pGroup.currency}
                                 onChange={(e) => updateNodeDeep(pPath, 'currency', e.target.value)}
@@ -197,7 +201,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                             </div>
 
                             <div>
-                              <label className="text-[8px] font-black text-[var(--neutral-400)] uppercase">Regular Price</label>
+                              <label className="text-[8px] font-black text-[var(--neutral-400)] uppercase">{t('admin.field.regular_price')}</label>
                               <div className="relative mt-1">
                                 <span className="absolute left-2 top-1.5 text-[10px] text-[var(--neutral-400)] font-bold">{selectedCurrency.symbol}</span>
                                 <input
@@ -211,7 +215,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                             </div>
 
                             <div>
-                              <label className="text-[8px] font-black text-[var(--neutral-400)] uppercase">Sale Price</label>
+                              <label className="text-[8px] font-black text-[var(--neutral-400)] uppercase">{t('admin.field.sale_price')}</label>
                               <div className="relative mt-1">
                                 <span className="absolute left-2 top-1.5 text-[10px] text-[var(--success-500)] font-bold">{selectedCurrency.symbol}</span>
                                 <input
@@ -232,7 +236,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-[var(--neutral-200)]">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-[var(--info-500)] uppercase">Stock Count</label>
+                    <label className="text-[10px] font-bold text-[var(--info-500)] uppercase">{t('admin.stock.count')}</label>
                     <input
                       type="number"
                       className="w-full p-2 border border-[var(--info-100)] rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
@@ -241,7 +245,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-[var(--info-500)] uppercase">Reserved</label>
+                    <label className="text-[10px] font-bold text-[var(--info-500)] uppercase">{t('admin.stock.reserved')}</label>
                     <input
                       type="number"
                       disabled
@@ -250,7 +254,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-[var(--info-500)] uppercase">Low Stock Limit</label>
+                    <label className="text-[10px] font-bold text-[var(--info-500)] uppercase">{t('admin.stock.low_limit')}</label>
                     <input
                       type="number"
                       className="w-full p-2 border border-[var(--info-100)] rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
@@ -261,7 +265,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                 </div>
 
                 <div className="space-y-1 pt-2 border-t border-[var(--neutral-200)]">
-                  <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase block">Dimensions (L x W x H cm)</label>
+                  <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase block">{t('admin.field.dimensions')}</label>
                   <div className="flex gap-2">
                     <input
                       placeholder="L"
@@ -290,9 +294,9 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                 <div className="pt-4 border-t border-[var(--neutral-200)]">
                   <div className="flex items-center justify-between mb-2">
                     <label className="text-[10px] font-bold text-[var(--neutral-400)] uppercase block">
-                      Variant Media
+                      {t('admin.variant.media')}
                     </label>
-                    <span className="text-[9px] text-[var(--neutral-400)] italic">Images or Videos</span>
+                    <span className="text-[9px] text-[var(--neutral-400)] italic">{t('admin.media.hint')}</span>
                   </div>
 
                   <div className="flex flex-wrap gap-3 mb-3">
@@ -352,14 +356,14 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                               ×
                             </button>
                           </div>
-                          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[7px] font-bold bg-[var(--primary-600)] px-1 rounded border border-[var(--primary-600)] text-white uppercase">New</span>
+                          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[7px] font-bold bg-[var(--primary-600)] px-1 rounded border border-[var(--primary-600)] text-white uppercase">{t('common.new')}</span>
                         </div>
                       );
                     })}
 
                     <label className="w-16 h-16 flex flex-col items-center justify-center border-2 border-dashed border-[var(--neutral-200)] rounded-lg cursor-pointer hover:border-[var(--primary-400)] hover:bg-[var(--primary-50)] transition-all text-[var(--neutral-400)] hover:text-[var(--primary-500)]">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
-                      <span className="text-[8px] font-bold mt-1 uppercase">Add</span>
+                      <span className="text-[8px] font-bold mt-1 uppercase">{t('common.add')}</span>
                       <input
                         type="file"
                         multiple
@@ -388,7 +392,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
               onClick={() => addNode([...currentPath, 'children'])}
               className="text-[10px] font-bold text-[var(--primary-600)] uppercase mt-2 hover:text-[var(--primary-800)]"
             >
-              + Add Sub-Option to {node.name || 'this'}
+              {t('admin.variant.add_sub_option', { name: node.name || t('common.this') })}
             </button>
           </div>
         );
@@ -615,7 +619,7 @@ export default function Products() {
   };
 
   const handleDelete = async (id: any) => {
-    if (!confirm("Delete this product?")) return;
+    if (!confirm(t('admin.product.delete_confirm'))) return;
     await apiFetch(`/newproducts/${id}`, { method: "DELETE" });
     setProducts(products.filter((p: any) => p._id !== id));
   };
