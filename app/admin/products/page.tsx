@@ -308,7 +308,7 @@ const VariantNode = ({ nodes, path = [], depth = 1, addNode, updateNodeDeep, lev
                           </div>
                         ) : (
                           <img
-                            src={`${apiUrl.replace('api', '')}${m.url}`}
+                            src={`${m.url}`}
                             alt="Saved"
                             className="w-full h-full object-cover rounded-lg border border-[var(--neutral-200)] shadow-sm"
                           />
@@ -689,7 +689,8 @@ export default function Products() {
       // --- API request ---
       let res: any;
       if (editingId) {
-        res = await apiFetch(`/products/${editingId}`, { method: "PUT", data });
+        data.append("id", editingId);
+        res = await apiFetch(`/products`, { method: "PUT", data });
         setProducts(products.map((p: any) => (p._id === editingId ? res : p)));
       } else {
         res = await apiFetch("/products", { method: "POST", data });
@@ -1229,7 +1230,7 @@ export default function Products() {
                   </div>
                 ) : (
                   <img
-                    src={m.url.startsWith('http') || m.url.startsWith('blob') ? m.url : `${apiUrl.replace('api', '')}${m.url}`}
+                    src={m.url.startsWith('http') || m.url.startsWith('blob') ? m.url : `${m.url}`}
                     alt={m.alt || "Product"}
                     className="w-full h-full object-cover rounded-xl border border-[var(--neutral-200)] shadow-sm"
                   />
@@ -1256,7 +1257,7 @@ export default function Products() {
         <div className="mt-8 flex gap-4">
           <button
             type="submit"
-            className="bg-[var(--primary-600)] text-white px-8 py-3 rounded font-bold hover:bg-[var(--primary-700)] shadow-lg"
+            className="bg-[var(--primary-600)] px-8 py-3 rounded font-bold hover:bg-[var(--primary-700)] shadow-lg"
           >
             {editingId ? "Update Product" : "Create Product"}
           </button>

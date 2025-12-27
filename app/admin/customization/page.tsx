@@ -33,53 +33,54 @@ import {
   Grid3x3,
   Sparkles,
 } from "lucide-react";
+import { apiFetch } from "@/lib/axios";
 
 /* ---------- SOLID THEME CONFIG ---------- */
 const solidThemes = [
-  { 
-    key: "red" as ThemeColor, 
+  {
+    key: "red" as ThemeColor,
     name: "Crimson",
     preview: "#EF4444",
     darkPreview: "#DC2626",
     lightPreview: "#FEE2E2",
   },
-  { 
-    key: "orange" as ThemeColor, 
+  {
+    key: "orange" as ThemeColor,
     name: "Sunset",
     preview: "#F97316",
     darkPreview: "#EA580C",
     lightPreview: "#FFEDD5",
   },
-  { 
-    key: "green" as ThemeColor, 
+  {
+    key: "green" as ThemeColor,
     name: "Emerald",
     preview: "#22C55E",
     darkPreview: "#16A34A",
     lightPreview: "#DCFCE7",
   },
-  { 
-    key: "teal" as ThemeColor, 
+  {
+    key: "teal" as ThemeColor,
     name: "Teal",
     preview: "#14B8A6",
     darkPreview: "#0D9488",
     lightPreview: "#CCFBF1",
   },
-  { 
-    key: "blue" as ThemeColor, 
+  {
+    key: "blue" as ThemeColor,
     name: "Azure",
     preview: "#3B82F6",
     darkPreview: "#2563EB",
     lightPreview: "#DBEAFE",
   },
-  { 
-    key: "purple" as ThemeColor, 
+  {
+    key: "purple" as ThemeColor,
     name: "Royal",
     preview: "#8B5CF6",
     darkPreview: "#7C3AED",
     lightPreview: "#F3E8FF",
   },
-  { 
-    key: "mono" as ThemeColor, 
+  {
+    key: "mono" as ThemeColor,
     name: "Monochrome",
     preview: "#0F172A",
     darkPreview: "#020617",
@@ -91,8 +92,8 @@ const solidThemes = [
 const getLightGradient = (color: ThemeColor) => {
   const theme = solidThemes.find(t => t.key === color);
   if (!theme) return ["#F1F5F9", "#E2E8F0", "#CBD5E1"];
-  
-  switch(color) {
+
+  switch (color) {
     case "red":
       return ["#FEE2E2", "#FECACA", "#FCA5A5"];
     case "orange":
@@ -113,57 +114,57 @@ const getLightGradient = (color: ThemeColor) => {
 
 /* ---------- GRADIENT THEME CONFIG (Updated with Lighter Colors) ---------- */
 const gradientThemes = [
-  { 
-    key: "sunset" as GradientTheme, 
+  {
+    key: "sunset" as GradientTheme,
     name: "Sunset",
     preview: "linear-gradient(135deg, #FFEDD5 0%, #FED7AA 50%, #FDBA74 100%)",
     color: "orange",
     description: "Warm sunrise tones"
   },
-  { 
-    key: "ocean" as GradientTheme, 
+  {
+    key: "ocean" as GradientTheme,
     name: "Ocean",
     preview: "linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 50%, #93C5FD 100%)",
     color: "blue",
     description: "Cool ocean breeze"
   },
-  { 
-    key: "aurora" as GradientTheme, 
+  {
+    key: "aurora" as GradientTheme,
     name: "Aurora",
     preview: "linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 50%, #86EFAC 100%)",
     color: "green",
     description: "Natural green tones"
   },
-  { 
-    key: "fire" as GradientTheme, 
+  {
+    key: "fire" as GradientTheme,
     name: "Fire",
     preview: "linear-gradient(135deg, #FEE2E2 0%, #FECACA 50%, #FCA5A5 100%)",
     color: "red",
     description: "Subtle red glow"
   },
-  { 
-    key: "forest" as GradientTheme, 
+  {
+    key: "forest" as GradientTheme,
     name: "Forest",
     preview: "linear-gradient(135deg, #DCFCE7 0%, #A7F3D0 50%, #6EE7B7 100%)",
     color: "green",
     description: "Deeper green tones"
   },
-  { 
-    key: "royal" as GradientTheme, 
+  {
+    key: "royal" as GradientTheme,
     name: "Royal",
     preview: "linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 50%, #D8B4FE 100%)",
     color: "purple",
     description: "Elegant purple shades"
   },
-  { 
-    key: "mono" as GradientTheme, 
+  {
+    key: "mono" as GradientTheme,
     name: "Mono",
     preview: "linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%)",
     color: "mono",
     description: "Clean monochrome"
   },
-  { 
-    key: "teal" as GradientTheme, 
+  {
+    key: "teal" as GradientTheme,
     name: "Teal",
     preview: "linear-gradient(135deg, #CCFBF1 0%, #99F6E4 50%, #5EEAD4 100%)",
     color: "teal",
@@ -251,10 +252,10 @@ const presetThemes = [
 
 export default function ThemeCustomizationPage() {
   const { theme: currentTheme, setTheme, resetTheme: resetThemeContext, isLoading: themeLoading } = useTheme();
-  
+
   const [mode, setMode] = useState<"select" | "color" | "gradient" | "typography" | "custom">("select");
   const [draftTheme, setDraftTheme] = useState<ThemeConfig | null>(currentTheme);
-  const [dialog, setDialog] = useState<{type: "success" | "error", message: string} | null>(null);
+  const [dialog, setDialog] = useState<{ type: "success" | "error", message: string } | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [customThemes, setCustomThemes] = useState<any[]>([]);
   const [themeName, setThemeName] = useState("");
@@ -265,16 +266,16 @@ export default function ThemeCustomizationPage() {
   const [fontSizePreview, setFontSizePreview] = useState("The quick brown fox jumps over the lazy dog.");
 
   // Load custom themes from localStorage on mount
-  useEffect(() => {
-    const savedThemes = localStorage.getItem("custom-themes");
-    if (savedThemes) {
-      try {
-        setCustomThemes(JSON.parse(savedThemes));
-      } catch (error) {
-        console.error("Error loading custom themes:", error);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedThemes = localStorage.getItem("custom-themes");
+  //   if (savedThemes) {
+  //     try {
+  //       setCustomThemes(JSON.parse(savedThemes));
+  //     } catch (error) {
+  //       console.error("Error loading custom themes:", error);
+  //     }
+  //   }
+  // }, []);
 
   // Keep draft theme in sync with the active theme when in select mode
   useEffect(() => {
@@ -297,80 +298,152 @@ export default function ThemeCustomizationPage() {
     if (draftTheme) {
       const updatedTheme = { ...draftTheme, ...newConfig };
       setDraftTheme(updatedTheme);
-      
+
       // Auto-preview when making changes
       if (!showPreview) setShowPreview(true);
     }
   };
 
   // Apply theme
+  // const handleApplyTheme = async (themeToApply?: ThemeConfig) => {
+  //   const finalTheme = themeToApply || draftTheme;
+
+  //   if (!finalTheme) {
+  //     setDialog({ type: "error", message: "No theme configuration to apply." });
+  //     return;
+  //   }
+
+  //   try {
+  //     setIsSaving(true);
+  //     clearPreviewMode();
+  //     setShowPreview(false);
+
+  //     await setTheme(finalTheme);
+
+  //     setDialog({
+  //       type: "success",
+  //       message: "Theme applied successfully across the entire website."
+  //     });
+  //     setTimeout(() => setDialog(null), 3000);
+  //   } catch (error) {
+  //     console.error("Error applying theme:", error);
+  //     setDialog({ type: "error", message: "Failed to apply theme." });
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
   const handleApplyTheme = async (themeToApply?: ThemeConfig) => {
     const finalTheme = themeToApply || draftTheme;
-
-    if (!finalTheme) {
-      setDialog({ type: "error", message: "No theme configuration to apply." });
-      return;
-    }
+    if (!finalTheme) return;
 
     try {
       setIsSaving(true);
-      clearPreviewMode();
-      setShowPreview(false);
 
+      // 1. Update the User's persistent preference in DB
+      // Assuming you have an endpoint for user profile updates
+
+      console.log(customThemes[0]?._id, customThemes)
+      if (!customThemes[0]?.id) {
+        await apiFetch("/themes", {
+          method: "PUT",
+          data: { config: finalTheme, id: customThemes[0]?._id }
+        });
+      }
+      else {
+        await apiFetch("/themes", {
+          method: "POST",
+          data: { config: finalTheme, name: "Theme", isPublic: true }
+        });
+
+      }
+      // 2. Update the local Context state
       await setTheme(finalTheme);
-      
-      setDialog({
-        type: "success",
-        message: "Theme applied successfully across the entire website."
-      });
+
+      setDialog({ type: "success", message: "Theme applied and saved to profile!" });
       setTimeout(() => setDialog(null), 3000);
-    } catch (error) {
-      console.error("Error applying theme:", error);
-      setDialog({ type: "error", message: "Failed to apply theme." });
+    } catch (error: any) {
+      setDialog({ type: "error", message: "Failed to apply theme preferences" });
     } finally {
       setIsSaving(false);
     }
   };
 
   // Save custom theme
-  const handleSaveCustomTheme = () => {
+  // const handleSaveCustomTheme = () => {
+  //   if (!themeName.trim()) {
+  //     setDialog({ type: "error", message: "Please enter a name for your theme." });
+  //     return;
+  //   }
+  //   if (!draftTheme) return;
+
+  //   // Get matching colors for preview
+  //   const solidTheme = solidThemes.find(t => t.key === draftTheme.color);
+  //   const gradientTheme = gradientThemes.find(t => t.key === draftTheme.gradient);
+
+  //   const previewColors = gradientTheme
+  //     ? getGradientColors(gradientTheme.preview)
+  //     : solidTheme
+  //       ? [solidTheme.lightPreview, solidTheme.preview, solidTheme.darkPreview]
+  //       : ["#F1F5F9", "#3B82F6", "#64748B"];
+
+  //   const newTheme = {
+  //     id: `custom-${Date.now()}`,
+  //     name: themeName,
+  //     description: themeDescription,
+  //     config: draftTheme,
+  //     isPreset: false,
+  //     createdAt: new Date().toISOString(),
+  //     previewColors,
+  //     matchesColor: gradientTheme?.color || draftTheme.color
+  //   };
+
+  //   const updatedThemes = [...customThemes, newTheme];
+  //   setCustomThemes(updatedThemes);
+  //   localStorage.setItem("custom-themes", JSON.stringify(updatedThemes));
+
+  //   setThemeName("");
+  //   setThemeDescription("");
+  //   setShowSaveDialog(false);
+
+  //   setDialog({ type: "success", message: `"${themeName}" saved as a custom theme!` });
+  //   setTimeout(() => setDialog(null), 3000);
+  // };
+  const handleSaveCustomTheme = async () => {
     if (!themeName.trim()) {
       setDialog({ type: "error", message: "Please enter a name for your theme." });
       return;
     }
     if (!draftTheme) return;
 
-    // Get matching colors for preview
-    const solidTheme = solidThemes.find(t => t.key === draftTheme.color);
-    const gradientTheme = gradientThemes.find(t => t.key === draftTheme.gradient);
-    
-    const previewColors = gradientTheme 
-      ? getGradientColors(gradientTheme.preview)
-      : solidTheme 
-        ? [solidTheme.lightPreview, solidTheme.preview, solidTheme.darkPreview]
-        : ["#F1F5F9", "#3B82F6", "#64748B"];
+    try {
+      setIsSaving(true);
 
-    const newTheme = {
-      id: `custom-${Date.now()}`,
-      name: themeName,
-      description: themeDescription,
-      config: draftTheme,
-      isPreset: false,
-      createdAt: new Date().toISOString(),
-      previewColors,
-      matchesColor: gradientTheme?.color || draftTheme.color
-    };
+      // Prepare data for the POST /api/themes route
+      const payload = {
+        name: themeName,
+        config: draftTheme,
+        isPublic: true, // You can toggle this based on a checkbox
+      };
 
-    const updatedThemes = [...customThemes, newTheme];
-    setCustomThemes(updatedThemes);
-    localStorage.setItem("custom-themes", JSON.stringify(updatedThemes));
-    
-    setThemeName("");
-    setThemeDescription("");
-    setShowSaveDialog(false);
-    
-    setDialog({ type: "success", message: `"${themeName}" saved as a custom theme!` });
-    setTimeout(() => setDialog(null), 3000);
+      const savedTheme = await apiFetch("/themes", {
+        method: "POST",
+        data: payload
+      });
+
+      // Update local state with the database response
+      setCustomThemes([savedTheme, ...customThemes]);
+
+      setThemeName("");
+      setThemeDescription("");
+      setShowSaveDialog(false);
+
+      setDialog({ type: "success", message: `"${themeName}" saved to database!` });
+      setTimeout(() => setDialog(null), 3000);
+    } catch (error: any) {
+      setDialog({ type: "error", message: error.message || "Failed to save theme" });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Helper to extract colors from gradient
@@ -380,12 +453,33 @@ export default function ThemeCustomizationPage() {
   };
 
   // Delete custom theme
-  const handleDeleteCustomTheme = (themeId: string) => {
-    const updatedThemes = customThemes.filter(theme => theme.id !== themeId);
-    setCustomThemes(updatedThemes);
-    localStorage.setItem("custom-themes", JSON.stringify(updatedThemes));
-    setDialog({ type: "success", message: "Theme deleted successfully!" });
-    setTimeout(() => setDialog(null), 3000);
+  // const handleDeleteCustomTheme = (themeId: string) => {
+  //   const updatedThemes = customThemes.filter(theme => theme.id !== themeId);
+  //   setCustomThemes(updatedThemes);
+  //   localStorage.setItem("custom-themes", JSON.stringify(updatedThemes));
+  //   setDialog({ type: "success", message: "Theme deleted successfully!" });
+  //   setTimeout(() => setDialog(null), 3000);
+  // };
+
+  const handleDeleteCustomTheme = async (themeId: string) => {
+    try {
+      setIsSaving(true);
+
+      // Calls DELETE /api/themes?id=...
+      await apiFetch(`/themes?id=${themeId}`, {
+        method: "DELETE"
+      });
+
+      const updatedThemes = customThemes.filter(theme => theme._id !== themeId);
+      setCustomThemes(updatedThemes);
+
+      setDialog({ type: "success", message: "Theme deleted from database!" });
+      setTimeout(() => setDialog(null), 3000);
+    } catch (error: any) {
+      setDialog({ type: "error", message: "Failed to delete theme" });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Load preset theme
@@ -401,10 +495,10 @@ export default function ThemeCustomizationPage() {
       setIsSaving(true);
       clearPreviewMode();
       setShowPreview(false);
-      
+
       await resetThemeContext();
       setDraftTheme(DEFAULT_THEME_CONFIG);
-      
+
       setDialog({ type: 'success', message: 'Theme has been reset to default.' });
       setTimeout(() => setDialog(null), 3000);
     } catch (error) {
@@ -417,7 +511,7 @@ export default function ThemeCustomizationPage() {
   // Export theme
   const handleExportTheme = () => {
     if (!draftTheme) return;
-    
+
     const themeData = JSON.stringify(draftTheme, null, 2);
     const blob = new Blob([themeData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -428,7 +522,7 @@ export default function ThemeCustomizationPage() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     setDialog({ type: 'success', message: 'Theme exported successfully!' });
     setTimeout(() => setDialog(null), 3000);
   };
@@ -437,6 +531,22 @@ export default function ThemeCustomizationPage() {
   const getMatchingGradients = (color: ThemeColor) => {
     return gradientThemes.filter(g => g.color === color);
   };
+
+  // Load custom themes from Database on mount
+  useEffect(() => {
+    const loadThemes = async () => {
+      try {
+        // Fetches themes from your /api/themes route
+        const themes = await apiFetch("/themes");
+        setCustomThemes(themes);
+      } catch (error: any) {
+        console.error("Error loading custom themes:", error);
+        setDialog({ type: "error", message: error.message || "Failed to load themes" });
+      }
+    };
+
+    loadThemes();
+  }, []);
 
   if (themeLoading || !draftTheme) {
     return (
@@ -475,22 +585,21 @@ export default function ThemeCustomizationPage() {
               Design and customize your website's appearance with precision. All changes are live-previewed and saved automatically.
             </p>
           </div>
-          
+
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowPreview(!showPreview)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all ${
-                showPreview 
-                  ? 'border-primary bg-primary/10 text-primary' 
-                  : 'border-border hover:border-primary/40 hover:bg-secondary'
-              }`}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all ${showPreview
+                ? 'border-primary bg-primary/10 text-primary'
+                : 'border-border hover:border-primary/40 hover:bg-secondary'
+                }`}
             >
               <Eye className="w-4 h-4" />
               <span className="text-sm font-medium hidden sm:inline">
                 {showPreview ? 'Preview On' : 'Preview Off'}
               </span>
             </button>
-            
+
             <button
               onClick={handleExportTheme}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border hover:border-primary/40 hover:bg-secondary transition-colors"
@@ -509,7 +618,7 @@ export default function ThemeCustomizationPage() {
               { key: "color" as const, label: "Colors", icon: Palette },
               { key: "gradient" as const, label: "Gradients", icon: Layers },
               { key: "typography" as const, label: "Typography", icon: Type },
-              { key: "custom" as const, label: "Custom Builder", icon: Brush },
+              // { key: "custom" as const, label: "Custom Builder", icon: Brush },
             ].map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
@@ -522,11 +631,10 @@ export default function ThemeCustomizationPage() {
                     setShowPreview(true);
                   }
                 }}
-                className={`group flex items-center gap-2 px-4 sm:px-5 py-3 rounded-xl border transition-all duration-200 ${
-                  mode === key
-                    ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/10"
-                    : "border-border hover:border-primary/40 hover:bg-secondary hover:shadow-md"
-                }`}
+                className={`group flex items-center gap-2 px-4 sm:px-5 py-3 rounded-xl border transition-all duration-200 ${mode === key
+                  ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/10"
+                  : "border-border hover:border-primary/40 hover:bg-secondary hover:shadow-md"
+                  }`}
               >
                 <Icon className={`w-4 h-4 transition-transform ${mode === key ? 'scale-110' : ''}`} />
                 <span className="text-sm font-medium whitespace-nowrap">{label}</span>
@@ -557,7 +665,7 @@ export default function ThemeCustomizationPage() {
                 {presetThemes.length} presets
               </span>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {presetThemes.map((preset) => (
                 <motion.div
@@ -565,11 +673,10 @@ export default function ThemeCustomizationPage() {
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleLoadPreset(preset)}
-                  className={`relative overflow-hidden rounded-2xl border-2 transition-all cursor-pointer group ${
-                    selectedPreset === preset.id
-                      ? "border-primary ring-4 ring-primary/10 bg-gradient-to-br from-primary/5 to-transparent"
-                      : "border-border hover:border-primary/40 bg-card"
-                  }`}
+                  className={`relative overflow-hidden rounded-2xl border-2 transition-all cursor-pointer group ${selectedPreset === preset.id
+                    ? "border-primary ring-4 ring-primary/10 bg-gradient-to-br from-primary/5 to-transparent"
+                    : "border-border hover:border-primary/40 bg-card"
+                    }`}
                 >
                   {preset.badge && (
                     <div className="absolute top-3 left-3 z-10">
@@ -578,7 +685,7 @@ export default function ThemeCustomizationPage() {
                       </span>
                     </div>
                   )}
-                  
+
                   <div className="p-5">
                     <div className="flex items-start justify-between mb-4">
                       <div className="space-y-1">
@@ -591,18 +698,18 @@ export default function ThemeCustomizationPage() {
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="mb-5 h-20 rounded-lg overflow-hidden">
-                      <div 
+                      <div
                         className="w-full h-full transition-transform group-hover:scale-105"
-                        style={{ 
-                          background: preset.previewColors.length === 1 
+                        style={{
+                          background: preset.previewColors.length === 1
                             ? preset.previewColors[0]
                             : `linear-gradient(135deg, ${preset.previewColors.join(', ')})`
                         }}
                       />
                     </div>
-                    
+
                     <div className="flex gap-2">
                       <button
                         onClick={(e) => {
@@ -643,16 +750,16 @@ export default function ThemeCustomizationPage() {
                   Manage and apply your saved custom themes
                 </p>
               </div>
-              
-              <button
+
+              {/* <button
                 onClick={() => setMode("custom")}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
               >
                 <Brush className="w-4 h-4" />
                 <span className="text-sm">Create New</span>
-              </button>
+              </button> */}
             </div>
-            
+
             {customThemes.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 {customThemes.map((theme) => (
@@ -668,7 +775,7 @@ export default function ThemeCustomizationPage() {
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
-                    
+
                     <div className="p-5">
                       <div className="mb-4">
                         <h3 className="font-semibold text-lg mb-1">{theme.name}</h3>
@@ -680,18 +787,18 @@ export default function ThemeCustomizationPage() {
                           {solidThemes.find(t => t.key === (theme.matchesColor || theme.config?.color))?.name || "Custom"}
                         </p>
                       </div>
-                      
+
                       <div className="h-16 rounded-lg mb-5 overflow-hidden">
-                        <div 
+                        <div
                           className="w-full h-full transition-transform group-hover:scale-105"
-                          style={{ 
-                            background: theme.previewColors?.length === 1 
+                          style={{
+                            background: theme.previewColors?.length === 1
                               ? theme.previewColors[0]
                               : `linear-gradient(135deg, ${theme.previewColors?.join(', ') || '#F1F5F9, #94A3B8, #475569'})`
                           }}
                         />
                       </div>
-                      
+
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleApplyTheme(theme.config)}
@@ -744,7 +851,7 @@ export default function ThemeCustomizationPage() {
               <Palette className="w-5 h-5 text-primary" />
               <span>Primary Color Palette</span>
             </h2>
-            
+
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
               {solidThemes.map(({ key, name, preview, darkPreview, lightPreview }) => (
                 <motion.button
@@ -752,23 +859,22 @@ export default function ThemeCustomizationPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleUpdateDraft({ color: key })}
-                  className={`relative flex flex-col items-center gap-3 p-4 rounded-xl border transition-all overflow-hidden ${
-                    selectedColor === key
-                      ? 'border-primary ring-2 ring-primary/20 bg-gradient-to-br from-primary/5 to-transparent'
-                      : 'border-border hover:border-primary/40 hover:bg-secondary'
-                  }`}
+                  className={`relative flex flex-col items-center gap-3 p-4 rounded-xl border transition-all overflow-hidden ${selectedColor === key
+                    ? 'border-primary ring-2 ring-primary/20 bg-gradient-to-br from-primary/5 to-transparent'
+                    : 'border-border hover:border-primary/40 hover:bg-secondary'
+                    }`}
                 >
                   <div className="relative w-16 h-16 rounded-full overflow-hidden border-4 border-background shadow-lg">
                     <div className="absolute inset-0 flex flex-col">
-                      <div 
+                      <div
                         className="flex-1"
                         style={{ backgroundColor: darkPreview }}
                       />
-                      <div 
+                      <div
                         className="flex-1"
                         style={{ backgroundColor: preview }}
                       />
-                      <div 
+                      <div
                         className="flex-1"
                         style={{ backgroundColor: lightPreview }}
                       />
@@ -783,7 +889,7 @@ export default function ThemeCustomizationPage() {
                 </motion.button>
               ))}
             </div>
-            
+
             <div className="mt-8 pt-6 border-t border-border">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="space-y-1">
@@ -794,7 +900,7 @@ export default function ThemeCustomizationPage() {
                     This color will be applied as the primary brand color
                   </p>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={() => setMode("gradient")}
@@ -853,7 +959,7 @@ export default function ThemeCustomizationPage() {
                 Change Color
               </button>
             </div>
-            
+
             {/* Matching Gradients Section */}
             <div className="mb-8">
               <h3 className="text-lg font-semibold mb-4">Matching Gradients</h3>
@@ -864,11 +970,10 @@ export default function ThemeCustomizationPage() {
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleUpdateDraft({ gradient: key })}
-                    className={`relative p-5 rounded-xl border-2 transition-all overflow-hidden group ${
-                      selectedGradient === key
-                        ? 'border-primary ring-2 ring-primary/20'
-                        : 'border-border hover:border-primary/40'
-                    }`}
+                    className={`relative p-5 rounded-xl border-2 transition-all overflow-hidden group ${selectedGradient === key
+                      ? 'border-primary ring-2 ring-primary/20'
+                      : 'border-border hover:border-primary/40'
+                      }`}
                   >
                     <div className="relative h-32 rounded-lg mb-4 overflow-hidden">
                       <div
@@ -876,7 +981,7 @@ export default function ThemeCustomizationPage() {
                         style={{ background: preview }}
                       />
                     </div>
-                    
+
                     <div className="text-left">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm font-medium">{name}</span>
@@ -892,7 +997,7 @@ export default function ThemeCustomizationPage() {
                 ))}
               </div>
             </div>
-            
+
             {/* All Gradients Section */}
             <div>
               <h3 className="text-lg font-semibold mb-4">All Gradient Themes</h3>
@@ -903,11 +1008,10 @@ export default function ThemeCustomizationPage() {
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleUpdateDraft({ gradient: key })}
-                    className={`relative p-5 rounded-xl border-2 transition-all overflow-hidden group ${
-                      selectedGradient === key
-                        ? 'border-primary ring-2 ring-primary/20'
-                        : 'border-border hover:border-primary/40'
-                    }`}
+                    className={`relative p-5 rounded-xl border-2 transition-all overflow-hidden group ${selectedGradient === key
+                      ? 'border-primary ring-2 ring-primary/20'
+                      : 'border-border hover:border-primary/40'
+                      }`}
                   >
                     <div className="relative h-24 rounded-lg mb-4 overflow-hidden">
                       <div
@@ -915,13 +1019,13 @@ export default function ThemeCustomizationPage() {
                         style={{ background: preview }}
                       />
                       <div className="absolute top-2 right-2">
-                        <div 
+                        <div
                           className="w-6 h-6 rounded-full border-2 border-background shadow-sm"
                           style={{ backgroundColor: solidThemes.find(t => t.key === color)?.preview }}
                         />
                       </div>
                     </div>
-                    
+
                     <div className="text-left">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm font-medium">{name}</span>
@@ -937,7 +1041,7 @@ export default function ThemeCustomizationPage() {
                 ))}
               </div>
             </div>
-            
+
             <div className="mt-8 pt-6 border-t border-border">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="space-y-1">
@@ -948,7 +1052,7 @@ export default function ThemeCustomizationPage() {
                     {selectedGradientTheme?.description}
                   </p>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={handleReset}
@@ -1000,11 +1104,10 @@ export default function ThemeCustomizationPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleUpdateDraft({ font: value })}
-                      className={`p-4 rounded-xl border transition-all text-left min-h-[120px] ${
-                        selectedFontKey === key
-                          ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
-                          : 'border-border hover:border-primary/40 hover:bg-secondary'
-                      }`}
+                      className={`p-4 rounded-xl border transition-all text-left min-h-[120px] ${selectedFontKey === key
+                        ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                        : 'border-border hover:border-primary/40 hover:bg-secondary'
+                        }`}
                       style={{ fontFamily: value }}
                     >
                       <div className="flex items-start justify-between mb-3">
@@ -1040,7 +1143,7 @@ export default function ThemeCustomizationPage() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-5">
                   {[
                     { key: 'xs', label: 'Extra Small', min: 10, max: 14, step: 0.5 },
@@ -1057,9 +1160,9 @@ export default function ThemeCustomizationPage() {
                             {fontSizes[key as keyof typeof fontSizes]}px
                           </span>
                         </div>
-                        <div 
+                        <div
                           className="text-sm px-3 py-1 rounded-md bg-secondary"
-                          style={{ 
+                          style={{
                             fontSize: `${fontSizes[key as keyof typeof fontSizes]}px`,
                             fontFamily: selectedFontValue
                           }}
@@ -1112,7 +1215,7 @@ export default function ThemeCustomizationPage() {
                     Preview text updates in real-time
                   </p>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={handleReset}
@@ -1158,16 +1261,16 @@ export default function ThemeCustomizationPage() {
               <div className="space-y-6">
                 <div className="p-5 rounded-xl border border-border bg-gradient-to-br from-secondary/30 to-transparent">
                   <h3 className="font-semibold mb-4">Current Theme Preview</h3>
-                  
+
                   <div className="space-y-4">
                     {/* Color & Gradient Preview */}
                     <div className="flex items-center gap-4 p-3 rounded-lg bg-background">
                       <div className="relative">
-                        <div 
+                        <div
                           className="w-12 h-12 rounded-lg"
-                          style={{ 
-                            background: selectedGradientTheme?.preview || 
-                            `linear-gradient(135deg, ${getLightGradient(selectedColor).join(', ')})`
+                          style={{
+                            background: selectedGradientTheme?.preview ||
+                              `linear-gradient(135deg, ${getLightGradient(selectedColor).join(', ')})`
                           }}
                         />
                       </div>
@@ -1178,7 +1281,7 @@ export default function ThemeCustomizationPage() {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Font Preview */}
                     <div className="flex items-center gap-4 p-3 rounded-lg bg-background">
                       <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
@@ -1186,7 +1289,7 @@ export default function ThemeCustomizationPage() {
                       </div>
                       <div className="flex-1">
                         <div className="font-medium">Typography</div>
-                        <div 
+                        <div
                           className="text-sm text-muted-foreground"
                           style={{ fontFamily: selectedFontValue }}
                         >
@@ -1195,11 +1298,11 @@ export default function ThemeCustomizationPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Live Preview */}
                   <div className="mt-6 p-4 rounded-lg bg-gradient-to-br from-secondary/20 to-transparent">
                     <h4 className="text-sm font-medium mb-3">Live Preview</h4>
-                    <div 
+                    <div
                       className="text-sm p-3 rounded-lg bg-background border border-border min-h-[100px]"
                       style={{ fontFamily: selectedFontValue }}
                     >
@@ -1225,7 +1328,7 @@ export default function ThemeCustomizationPage() {
                     <h4 className="font-medium mb-1">Colors</h4>
                     <p className="text-xs text-muted-foreground">Change color palette</p>
                   </button>
-                  
+
                   <button
                     onClick={() => setMode("gradient")}
                     className="p-4 rounded-xl border border-border hover:border-primary/40 hover:bg-secondary transition-colors text-left group"
@@ -1236,7 +1339,7 @@ export default function ThemeCustomizationPage() {
                     <h4 className="font-medium mb-1">Gradients</h4>
                     <p className="text-xs text-muted-foreground">Apply gradient themes</p>
                   </button>
-                  
+
                   <button
                     onClick={() => setMode("typography")}
                     className="p-4 rounded-xl border border-border hover:border-primary/40 hover:bg-secondary transition-colors text-left group"
@@ -1255,7 +1358,7 @@ export default function ThemeCustomizationPage() {
                 {/* Save Theme */}
                 <div className="p-5 rounded-xl border border-border bg-gradient-to-br from-secondary/30 to-transparent">
                   <h3 className="font-semibold mb-4">Save Custom Theme</h3>
-                  
+
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Theme Name *</label>
@@ -1267,7 +1370,7 @@ export default function ThemeCustomizationPage() {
                         className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium mb-2">Description (Optional)</label>
                       <textarea
@@ -1278,7 +1381,7 @@ export default function ThemeCustomizationPage() {
                         className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
                       />
                     </div>
-                    
+
                     <button
                       onClick={handleSaveCustomTheme}
                       disabled={!themeName.trim()}
@@ -1309,7 +1412,7 @@ export default function ThemeCustomizationPage() {
                       </>
                     )}
                   </button>
-                  
+
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={handleExportTheme}
@@ -1318,7 +1421,7 @@ export default function ThemeCustomizationPage() {
                       <Download className="w-4 h-4" />
                       Export
                     </button>
-                    
+
                     <button
                       onClick={handleReset}
                       className="py-3 rounded-lg border border-border hover:bg-secondary transition-colors flex items-center justify-center gap-2 text-sm"
@@ -1343,11 +1446,10 @@ export default function ThemeCustomizationPage() {
             exit={{ opacity: 0, y: 20 }}
             className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-[calc(100%-2rem)]"
           >
-            <div className={`relative px-4 py-4 rounded-xl shadow-xl border-l-4 backdrop-blur-sm ${
-              dialog.type === 'success' 
-                ? 'bg-green-50/95 border-green-500 text-green-800' 
-                : 'bg-red-50/95 border-red-500 text-red-800'
-            }`}>
+            <div className={`relative px-4 py-4 rounded-xl shadow-xl border-l-4 backdrop-blur-sm ${dialog.type === 'success'
+              ? 'bg-green-50/95 border-green-500 text-green-800'
+              : 'bg-red-50/95 border-red-500 text-red-800'
+              }`}>
               <div className="flex items-start gap-3">
                 {dialog.type === 'success' ? (
                   <div className="p-1 rounded-full bg-green-100">
