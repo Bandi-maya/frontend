@@ -41,14 +41,35 @@ export const POST = async (req: NextRequest) => {
 
     const logoUrl = await saveFile(file, "programs");
 
+    // Helper to parse arrays safely from FormData
+    const parseArray = (key: string) => {
+      const value = formData.get(key);
+      if (!value) return [];
+      try {
+        // If it's a JSON string from frontend, parse it
+        return JSON.parse(value as string);
+      } catch {
+        // Fallback for simple comma-separated strings
+        return (value as string).split(",").map(i => i.trim()).filter(Boolean);
+      }
+    };
+
     const program = await Program.create({
       title: formData.get("title"),
       subtitle: formData.get("subtitle"),
       description: formData.get("description"),
-      features: formData.get("features") ? JSON.parse(formData.get("features") as string) : [],
       type: formData.get("type"),
       icon: formData.get("icon"),
       color: formData.get("color"),
+      // --- NEW STEM FIELDS ---
+      durationWeeks: Number(formData.get("durationWeeks")) || 0,
+      ageGroup: formData.get("ageGroup"),
+      prerequisites: formData.get("prerequisites"),
+      certification: formData.get("certification"),
+      features: parseArray("features"),
+      equipment: parseArray("equipment"),
+      learningOutcomes: parseArray("learningOutcomes"),
+      // -----------------------
       image: {
         url: logoUrl,
         alt: formData.get("title") || "program image",
@@ -74,28 +95,39 @@ export const PUT = async (req: NextRequest) => {
     if (!program) return NextResponse.json({ message: "Program not found" }, { status: 404 });
 
     const file = formData.get("file") as File || formData.get("image") as File;
-
     if (file && file.size > 0) {
-      // Delete old file
       if (program.image?.url) {
         const oldPath = path.join(process.cwd(), "public", program.image.url);
-        try { await fs.unlink(oldPath); } catch (e) { /* ignore if not found */ }
+        try { await fs.unlink(oldPath); } catch (e) {}
       }
-      // Save new file
       program.image.url = await saveFile(file, "programs");
     }
 
-    // Update other fields
+    // Helper to parse arrays safely
+    const parseArray = (key: string) => {
+      const value = formData.get(key);
+      try { return JSON.parse(value as string); } 
+      catch { return (value as string || "").split(",").map(i => i.trim()).filter(Boolean); }
+    };
+
+    // Update standard fields
     program.title = formData.get("title") ?? program.title;
     program.subtitle = formData.get("subtitle") ?? program.subtitle;
     program.description = formData.get("description") ?? program.description;
     program.type = formData.get("type") ?? program.type;
     program.icon = formData.get("icon") ?? program.icon;
     program.color = formData.get("color") ?? program.color;
+
+    // Update STEM specific fields
+    if (formData.has("durationWeeks")) program.durationWeeks = Number(formData.get("durationWeeks"));
+    if (formData.has("ageGroup")) program.ageGroup = formData.get("ageGroup");
+    if (formData.has("prerequisites")) program.prerequisites = formData.get("prerequisites");
+    if (formData.has("certification")) program.certification = formData.get("certification");
     
-    if (formData.get("features")) {
-        program.features = JSON.parse(formData.get("features") as string);
-    }
+    // Update Array fields
+    if (formData.has("features")) program.features = parseArray("features");
+    if (formData.has("equipment")) program.equipment = parseArray("equipment");
+    if (formData.has("learningOutcomes")) program.learningOutcomes = parseArray("learningOutcomes");
 
     await program.save();
     return NextResponse.json(program);

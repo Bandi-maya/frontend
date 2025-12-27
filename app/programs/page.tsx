@@ -3,8 +3,7 @@ import { ArrowRight, Calendar, Users, BookOpen, Trophy, Sparkles, Target, Zap, S
 import { useI18n } from "@/contexts/I18nContext";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { cubicBezier, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 const iconMap: any = {
     Users, BookOpen, Trophy, Calendar, Target, Zap, Shield, TrendingUp,

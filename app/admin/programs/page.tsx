@@ -31,7 +31,23 @@ import {
     TrendingUp,
     Sparkles,
     Edit3,
-    Plus
+    Plus,
+    Save,
+    Send,
+    Rocket,
+    Upload,
+    Cpu,
+    Palette,
+    Database,
+    Wifi,
+    Globe,
+    Code,
+    Bot,
+    Brain,
+    Satellite,
+    Atom,
+    Microscope,
+    Icon
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/axios";
@@ -39,14 +55,29 @@ import { apiUrl } from "@/lib/constants";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 
 const ICONS = [
-    { value: "Users", icon: Users, color: "var(--blue)" },
-    { value: "BookOpen", icon: BookOpen, color: "var(--green)" },
-    { value: "Trophy", icon: Trophy, color: "var(--amber)" },
-    { value: "Calendar", icon: Calendar, color: "var(--purple)" },
-    { value: "Shield", icon: Shield, color: "var(--indigo)" },
-    { value: "Target", icon: Target, color: "var(--rose)" },
-    { value: "Zap", icon: Zap, color: "var(--yellow)" },
-    { value: "TrendingUp", icon: TrendingUp, color: "var(--emerald)" },
+    // Academic & Engagement
+    { value: "Users", icon: Users, color: "#3b82f6" },       // Blue
+    { value: "BookOpen", icon: BookOpen, color: "#10b981" }, // Emerald
+    { value: "Trophy", icon: Trophy, color: "#f59e0b" },     // Amber
+    { value: "Calendar", icon: Calendar, color: "#8b5cf6" }, // Purple
+    { value: "Target", icon: Target, color: "#f43f5e" },     // Rose
+    { value: "Zap", icon: Zap, color: "#eab308" },           // Yellow
+    { value: "Shield", icon: Shield, color: "#6366f1" },     // Indigo
+    { value: "TrendingUp", icon: TrendingUp, color: "#22c55e" }, // Green
+
+    // Tech & Engineering (The New Additions)
+    { value: "Cpu", icon: Cpu, color: "#475569" },           // Slate
+    { value: "Rocket", icon: Rocket, color: "#f97316" },     // Orange
+    { value: "Palette", icon: Palette, color: "#ec4899" },   // Pink (Design)
+    { value: "Database", icon: Database, color: "#06b6d4" },  // Cyan (Data)
+    { value: "Wifi", icon: Wifi, color: "#0ea5e9" },         // Sky (IoT)
+    { value: "Globe", icon: Globe, color: "#14b8a6" },       // Teal (Networking)
+    { value: "Code", icon: Code, color: "#6d28d9" },         // Deep Violet
+    { value: "Bot", icon: Bot, color: "#4f46e5" },           // Royal Blue (Robotics)
+    { value: "Brain", icon: Brain, color: "#d946ef" },       // Fuchsia (AI)
+    { value: "Satellite", icon: Satellite, color: "#64748b" }, // Steel (Space)
+    { value: "Atom", icon: Atom, color: "#2dd4bf" },         // Aquamarine (Physics)
+    { value: "Microscope", icon: Microscope, color: "#84cc16" } // Lime (Bio-Tech)
 ];
 
 export default function Programs() {
@@ -69,10 +100,17 @@ export default function Programs() {
         title: "",
         subtitle: "",
         description: "",
-        features: "",
-        icon: "Users",
+        features: "",         // Will be converted to array on submit
+        icon: "Cpu",          // Defaulted to a STEM icon
         type: "main",
-        status: "active"
+        status: "active",
+        // New fields based on your program data
+        durationWeeks: "",
+        ageGroup: "",
+        prerequisites: "",
+        certification: "",
+        equipment: "",        // Will be converted to array on submit
+        learningOutcomes: ""  // Will be converted to array on submit
     });
 
     /* ---------------- FETCH ---------------- */
@@ -149,71 +187,103 @@ export default function Programs() {
             title: "",
             subtitle: "",
             description: "",
-            features: "",
-            icon: "Users",
+            features: "",         // Will be converted to array on submit
+            icon: "Cpu",          // Defaulted to a STEM icon
             type: "main",
-            status: "active"
+            status: "active",
+            // New fields based on your program data
+            durationWeeks: "",
+            ageGroup: "",
+            prerequisites: "",
+            certification: "",
+            equipment: "",        // Will be converted to array on submit
+            learningOutcomes: ""  // Will be converted to array on submit
         });
     };
 
     /* ---------------- SUBMIT ---------------- */
     const handleSubmit = async () => {
+        // 1. Validations
         if (!form.title.trim())
             return toast({ title: "Program title is required", variant: "destructive" });
 
         if (!editingId && !imageFile)
             return toast({ title: "Program image is required", variant: "destructive" });
 
+        // 2. Prepare FormData
         const formData = new FormData();
+
+        // Basic Fields
         formData.append("title", form.title);
         formData.append("subtitle", form.subtitle);
         formData.append("description", form.description);
         formData.append("icon", form.icon);
         formData.append("type", form.type);
         formData.append("status", form.status);
-        formData.append(
-            "features",
-            JSON.stringify(
-                form.features
-                    .split(",")
-                    .map((f) => f.trim())
+        // formData.append("color", form.color || "#6366f1");
+
+        // New STEM Technical Fields
+        formData.append("durationWeeks", form.durationWeeks.toString());
+        formData.append("ageGroup", form.ageGroup);
+        formData.append("prerequisites", form.prerequisites);
+        formData.append("certification", form.certification);
+
+        // 3. Helper to Convert Comma Strings to JSON Arrays
+        const formatToArray = (str: any) => {
+            if (!str) return JSON.stringify([]);
+            return JSON.stringify(
+                str.split(",")
+                    .map((item: any) => item.trim())
                     .filter(Boolean)
-            )
-        );
+            );
+        };
+
+        formData.append("features", formatToArray(form.features));
+        formData.append("equipment", formatToArray(form.equipment));
+        formData.append("learningOutcomes", formatToArray(form.learningOutcomes));
 
         if (imageFile) {
             formData.append("image", imageFile);
         }
 
+        // Add ID if editing
+        if (editingId) {
+            formData.append("id", editingId);
+        }
+
+        // 4. API Call
         try {
+            const method = editingId ? "PUT" : "POST";
+            // Note: Check if your apiFetch handles /programs/:id or just /programs
+            // Based on your route.ts, PUT expects the ID inside the formData
+            const url = "/programs";
+
+            const result = await apiFetch(url, {
+                method: method,
+                data: formData,
+            });
+
             if (editingId) {
-                const updated = await apiFetch(`/programs/${editingId}`, {
-                    method: "PUT",
-                    data: formData,
-                });
-                setPrograms(programs.map((p: any) => p._id === editingId ? updated : p));
+                setPrograms(programs.map((p: any) => (p._id === editingId ? result : p)));
                 toast({
                     title: "🎉 Program Updated",
-                    description: "Changes saved successfully",
+                    description: `${form.title} has been updated successfully.`,
                     className: "bg-gradient-to-r from-emerald-500 to-teal-600 text-white"
                 });
             } else {
-                const created = await apiFetch("/programs", {
-                    method: "POST",
-                    data: formData,
-                });
-                setPrograms([created, ...programs]);
+                setPrograms([result, ...programs]);
                 toast({
                     title: "✨ Program Created",
-                    description: "New program added successfully",
+                    description: "New STEM track is now live.",
                     className: "bg-gradient-to-r from-primary to-primary/80 text-white"
                 });
             }
             resetForm();
         } catch (err) {
+            console.error("Submit Error:", err);
             toast({
                 title: "Failed to save program",
-                description: "Please try again",
+                description: "Check your connection and try again.",
                 variant: "destructive"
             });
         }
@@ -229,8 +299,16 @@ export default function Programs() {
             features: program.features?.join(", ") || "",
             icon: program.icon,
             type: program.type,
-            status: program.status || "active"
+            status: program.status || "active",
+            // New fields based on your program data
+            durationWeeks: program.durationWeeks || "",
+            ageGroup: program.ageGroup || "",
+            prerequisites: program.prerequisites || "",
+            certification: program.certification || "",
+            equipment: program.equipment?.join(", ") || "",        // Will be converted to array on submit
+            learningOutcomes: program.learningOutcomes?.join(", ") || ""  // Will be converted to array on submit
         });
+
         setPreview((apiUrl.replace('/api', '') + program.image?.url) || null);
         setIsFormExpanded(true);
         setTimeout(() => {
@@ -547,125 +625,157 @@ export default function Programs() {
                             initial="hidden"
                             animate="visible"
                             exit="hidden"
-                            className="w-full max-w-4xl mx-auto px-4 py-8"
+                            className="w-full max-w-5xl mx-auto px-4 py-8"
                         >
                             <div
                                 className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-3xl border shadow-2xl overflow-hidden transition-all duration-500"
                                 style={{
                                     borderColor: editingId ? 'rgb(245 158 11 / 0.3)' : 'rgb(99 102 241 / 0.3)',
-                                    boxShadow: editingId
-                                        ? '0 20px 25px -5px rgb(245 158 11 / 0.1)'
-                                        : '0 20px 25px -5px rgb(99 102 241 / 0.1)',
                                 }}
                             >
                                 {/* Header Section */}
                                 <div className={`p-6 border-b flex items-center justify-between ${editingId ? 'bg-amber-50/50' : 'bg-indigo-50/50'}`}>
                                     <div>
-                                        <h2 className="text-xl font-bold text-slate-800">
-                                            {editingId ? 'Edit Program' : 'Create New Program'}
+                                        <h2 className="text-xl font-black text-slate-800 uppercase tracking-tight">
+                                            {editingId ? 'Modify STEM Track' : 'Launch New STEM Track'}
                                         </h2>
-                                        <p className="text-sm text-slate-500">Fill in the details below to publish your program.</p>
+                                        <p className="text-sm text-slate-500 font-medium">Configure the engineering curriculum and requirements.</p>
                                     </div>
-                                    <div className={`p-3 rounded-full ${editingId ? 'bg-amber-100' : 'bg-indigo-100'}`}>
-                                        {editingId ? <Edit3 className="w-5 h-5 text-amber-600" /> : <Plus className="w-5 h-5 text-indigo-600" />}
+                                    <div className={`p-3 rounded-2xl shadow-sm ${editingId ? 'bg-amber-100 text-amber-600' : 'bg-indigo-100 text-indigo-600'}`}>
+                                        {editingId ? <Edit3 className="w-6 h-6" /> : <Rocket className="w-6 h-6" />}
                                     </div>
                                 </div>
 
                                 {/* Form Body */}
-                                <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                                    {/* Left Column: Text Inputs */}
-                                    <div className="space-y-5">
+                                    {/* Left Column: Core Identity */}
+                                    <div className="space-y-6">
                                         <div className="group">
-                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Program Title</label>
-                                            <input name="title" value={form.title} onChange={handleChange}
-                                                placeholder="e.g. Advanced Web Development"
-                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50" />
+                                            <label className="text-[10px] font-bold text-indigo-600 uppercase tracking-[0.2em] mb-2 block ml-1">Program Identity</label>
+                                            <div className="space-y-4">
+                                                <input name="title" value={form.title} onChange={handleChange}
+                                                    placeholder="Program Title (e.g. Robotics Engineering)"
+                                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white font-semibold" />
+
+                                                <input name="subtitle" value={form.subtitle} onChange={handleChange}
+                                                    placeholder="Subtitle/Track Name"
+                                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white text-sm" />
+                                            </div>
                                         </div>
 
                                         <div className="group">
-                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Subtitle</label>
-                                            <input name="subtitle" value={form.subtitle} onChange={handleChange}
-                                                placeholder="A short catchphrase..."
-                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50" />
-                                        </div>
-
-                                        <div className="group">
-                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Program Description</label>
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Curriculum Description</label>
                                             <textarea name="description" value={form.description} onChange={handleChange}
-                                                placeholder="Tell us more about this program..."
-                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50 min-h-[120px] resize-none" />
+                                                placeholder="Detail the learning journey..."
+                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white min-h-[140px] resize-none text-sm leading-relaxed" />
                                         </div>
-                                    </div>
-
-                                    {/* Right Column: Media & Meta */}
-                                    <div className="space-y-5">
-                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Program Thumbnail</label>
-                                        <label className="group relative border-2 border-dashed border-slate-300 rounded-2xl p-4 cursor-pointer hover:border-indigo-500 hover:bg-indigo-50/30 transition-all flex flex-col items-center justify-center min-h-[200px] overflow-hidden">
-                                            {preview ? (
-                                                <>
-                                                    <img src={preview} alt="preview" className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105" />
-                                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                        <span className="text-white text-sm font-medium">Change Image</span>
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <div className="text-center">
-                                                    <div className="bg-indigo-100 p-4 rounded-full mb-3 inline-block">
-                                                        <ImageIcon className="w-8 h-8 text-indigo-500" />
-                                                    </div>
-                                                    <span className="block text-sm font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">
-                                                        Click to upload
-                                                    </span>
-                                                    <span className="text-xs text-slate-400">PNG, JPG up to 10MB</span>
-                                                </div>
-                                            )}
-                                            <input type="file" accept="image/*" hidden onChange={handleImageChange} />
-                                        </label>
 
                                         <div className="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Icon</label>
-                                                <select name="icon" value={form.icon} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50 appearance-none">
-                                                    {ICONS.map((i: any) => <option key={i.value} value={i.value}>{i.value}</option>)}
-                                                </select>
+                                            <div className="group">
+                                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Duration (Weeks)</label>
+                                                <input type="number" name="durationWeeks" value={form.durationWeeks} onChange={handleChange}
+                                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none bg-white" />
                                             </div>
-                                            <div>
-                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Category</label>
-                                                <select name="type" value={form.type} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50 appearance-none">
-                                                    <option value="main">Main Program</option>
-                                                    <option value="additional">Additional</option>
-                                                </select>
+                                            <div className="group">
+                                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Target Age Group</label>
+                                                <input name="ageGroup" value={form.ageGroup} onChange={handleChange} placeholder="e.g. Ages 14-18"
+                                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none bg-white" />
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Full Width Bottom Input */}
-                                    <div className="md:col-span-2 group">
-                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Features</label>
-                                        <input name="features" value={form.features} onChange={handleChange}
-                                            placeholder="Live Sessions, Certificate, Lifetime Access (separate with commas)"
-                                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50" />
+                                    {/* Right Column: Media & Technical Specs */}
+                                    <div className="space-y-6">
+                                        <div>
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Visual Representation</label>
+                                            <label className="group relative border-2 border-dashed border-slate-200 rounded-3xl p-4 cursor-pointer hover:border-indigo-500 hover:bg-indigo-50/30 transition-all flex flex-col items-center justify-center min-h-[220px] overflow-hidden bg-slate-50/50">
+                                                {preview ? (
+                                                    <>
+                                                        <img src={preview} alt="preview" className="absolute inset-0 h-full w-full object-cover" />
+                                                        <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                                                            <div className="flex items-center gap-2 text-white font-bold bg-white/20 px-4 py-2 rounded-full border border-white/30">
+                                                                <Upload className="w-4 h-4" /> Change Media
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <div className="text-center">
+                                                        <div className="bg-white p-4 rounded-2xl shadow-sm mb-3 inline-block">
+                                                            <Cpu className="w-8 h-8 text-indigo-500" />
+                                                        </div>
+                                                        <span className="block text-sm font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">Upload Header Image</span>
+                                                        <span className="text-[10px] text-slate-400 font-medium tracking-wide">Dimension: 1200x800px recommended</span>
+                                                    </div>
+                                                )}
+                                                <input type="file" accept="image/*" hidden onChange={handleImageChange} />
+                                            </label>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="group">
+                                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Required Prerequisites</label>
+                                                <input name="prerequisites" value={form.prerequisites} onChange={handleChange}
+                                                    placeholder="e.g. Basic Python knowledge"
+                                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none bg-white text-sm" />
+                                            </div>
+
+                                            <div className="group">
+                                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Certification Awarded</label>
+                                                <input name="certification" value={form.certification} onChange={handleChange}
+                                                    placeholder="e.g. Autodesk Certified User"
+                                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none bg-white text-sm" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Full Width Technical Sections */}
+                                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
+                                        <div className="group">
+                                            <label className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.2em] mb-2 block ml-1">Core Features (Comma Separated)</label>
+                                            <textarea name="features" value={form.features} onChange={handleChange}
+                                                placeholder="VEX Robotics, Arduino, 3D CAD..."
+                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none bg-white text-sm min-h-[80px]" />
+                                        </div>
+                                        <div className="group">
+                                            <label className="text-[10px] font-bold text-amber-600 uppercase tracking-[0.2em] mb-2 block ml-1">Equipment Provided</label>
+                                            <textarea name="equipment" value={form.equipment} onChange={handleChange}
+                                                placeholder="Laptops, 3D Printers, Sensors..."
+                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none bg-white text-sm min-h-[80px]" />
+                                        </div>
                                     </div>
 
                                     {/* Action Buttons */}
-                                    <div className="md:col-span-2 flex items-center justify-end gap-3 pt-4 border-t mt-2">
-                                        <button
-                                            type="button"
-                                            className="px-6 py-2.5 rounded-xl font-medium text-slate-600 hover:bg-slate-100 transition-colors"
-                                            onClick={() => {/* add cancel logic */ }}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className={`px-8 py-2.5 rounded-xl font-bold text-white shadow-lg transition-all active:scale-95 ${editingId
-                                                    ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-200'
-                                                    : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'
+                                    <div className="md:col-span-2 flex items-center justify-between pt-6 border-t border-slate-100">
+                                        <div className="flex items-center gap-4">
+                                            <select name="icon" value={form.icon} onChange={handleChange} className="px-4 py-2 rounded-lg border border-slate-200 text-xs font-bold bg-slate-50 outline-none">
+                                                {ICONS.map((i: any) => {
+                                                    const Icon = i.icon;
+
+                                                    return <option key={i.value} value={i.value}>
+                                                        <div>
+                                                            <Icon className="w-6 h-6 text-primary" />{i.value} Icon
+                                                        </div>
+                                                    </option>
+                                                })}
+                                            </select>
+                                            <select name="type" value={form.type} onChange={handleChange} className="px-4 py-2 rounded-lg border border-slate-200 text-xs font-bold bg-slate-50 outline-none">
+                                                <option value="main">Main Program</option>
+                                                <option value="additional">Elective Track</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="flex items-center gap-3">
+                                            <button type="button" onClick={() => { resetForm() }} className="px-6 py-2.5 rounded-xl font-bold text-slate-400 hover:text-slate-600 transition-colors text-sm">
+                                                Discard
+                                            </button>
+                                            <button type="submit" className={`px-10 py-3 rounded-xl font-black text-white shadow-xl transition-all active:scale-95 flex items-center gap-2 ${editingId ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-200' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'
                                                 }`}
-                                        >
-                                            {editingId ? 'Update Program' : 'Publish Program'}
-                                        </button>
+                                                onClick={() => handleSubmit()}
+                                            >
+                                                {editingId ? <><Save className="w-4 h-4" /> Save Changes</> : <><Send className="w-4 h-4" /> Deploy Program</>}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

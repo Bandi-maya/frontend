@@ -27,7 +27,7 @@ export default function ProductCard({ product, index = 0 }: any) {
 
   const isVideo = displayMedia?.type === 'video'
   const mediaUrl = displayMedia?.url
-    ? `${new URL(apiUrl).origin}/${displayMedia.url}`
+    ? `${'http://localhost:3000'}/${displayMedia.url}`
     : '/placeholder.png'
 
   // 2. Price Logic
