@@ -29,7 +29,9 @@ import {
     Target,
     Zap,
     TrendingUp,
-    Sparkles
+    Sparkles,
+    Edit3,
+    Plus
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/axios";
@@ -94,14 +96,14 @@ export default function Programs() {
     const filteredPrograms = useMemo(() => {
         return programs.filter((program: any) => {
             // Search filter
-            const matchesSearch = searchQuery === "" || 
+            const matchesSearch = searchQuery === "" ||
                 program.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 program.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 program.subtitle?.toLowerCase().includes(searchQuery.toLowerCase());
 
             // Type filter
             const matchesType = filters.type === "all" || program.type === filters.type;
-            
+
             // Icon filter
             const matchesIcon = filters.icon === "all" || program.icon === filters.icon;
 
@@ -190,8 +192,8 @@ export default function Programs() {
                     data: formData,
                 });
                 setPrograms(programs.map((p: any) => p._id === editingId ? updated : p));
-                toast({ 
-                    title: "🎉 Program Updated", 
+                toast({
+                    title: "🎉 Program Updated",
                     description: "Changes saved successfully",
                     className: "bg-gradient-to-r from-emerald-500 to-teal-600 text-white"
                 });
@@ -201,18 +203,18 @@ export default function Programs() {
                     data: formData,
                 });
                 setPrograms([created, ...programs]);
-                toast({ 
-                    title: "✨ Program Created", 
+                toast({
+                    title: "✨ Program Created",
                     description: "New program added successfully",
                     className: "bg-gradient-to-r from-primary to-primary/80 text-white"
                 });
             }
             resetForm();
         } catch (err) {
-            toast({ 
-                title: "Failed to save program", 
+            toast({
+                title: "Failed to save program",
                 description: "Please try again",
-                variant: "destructive" 
+                variant: "destructive"
             });
         }
     };
@@ -242,8 +244,8 @@ export default function Programs() {
         try {
             await apiFetch(`/programs/${id}`, { method: "DELETE" });
             setPrograms(programs.filter((p: any) => p._id !== id));
-            toast({ 
-                title: "🗑️ Program Deleted", 
+            toast({
+                title: "🗑️ Program Deleted",
                 description: "Program removed successfully",
                 className: "bg-gradient-to-r from-destructive/90 to-destructive text-white"
             });
@@ -258,17 +260,17 @@ export default function Programs() {
         const active = programs.filter((p: any) => p.status === "active").length;
         const main = programs.filter((p: any) => p.type === "main").length;
         const additional = programs.filter((p: any) => p.type === "additional").length;
-        
+
         return { total, active, main, additional };
     }, [programs]);
 
     return (
         <div className="min-h-screen"
-             style={{ '--bg-color': 'hsl(var(--background))' } as React.CSSProperties}>
+            style={{ '--bg-color': 'hsl(var(--background))' } as React.CSSProperties}>
             <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
 
                 {/* HEADER SECTION */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6"
@@ -276,11 +278,11 @@ export default function Programs() {
                     <div>
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"
-                                 style={{ 
-                                     backgroundColor: 'hsl(var(--primary) / 0.1)',
-                                 } as React.CSSProperties}>
-                                <Layers className="w-6 h-6" 
-                                        style={{ color: 'hsl(var(--primary))' } as React.CSSProperties} />
+                                style={{
+                                    backgroundColor: 'hsl(var(--primary) / 0.1)',
+                                } as React.CSSProperties}>
+                                <Layers className="w-6 h-6"
+                                    style={{ color: 'hsl(var(--primary))' } as React.CSSProperties} />
                             </div>
                             <div>
                                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight"
@@ -288,22 +290,22 @@ export default function Programs() {
                                     Programs Management
                                 </h1>
                                 <p className="text-sm"
-                                   style={{ color: 'hsl(var(--muted-foreground))' } as React.CSSProperties}>
+                                    style={{ color: 'hsl(var(--muted-foreground))' } as React.CSSProperties}>
                                     Manage and organize your STEM programs
                                 </p>
                             </div>
                         </div>
-                        
+
                         {/* STATS CARDS */}
                         <div className="flex flex-wrap gap-3 mt-4">
                             <div className="px-4 py-3 rounded-xl border backdrop-blur-sm"
-                                 style={{
-                                     backgroundColor: 'hsl(var(--card) / 0.8)',
-                                     borderColor: 'hsl(var(--border))',
-                                 } as React.CSSProperties}>
+                                style={{
+                                    backgroundColor: 'hsl(var(--card) / 0.8)',
+                                    borderColor: 'hsl(var(--border))',
+                                } as React.CSSProperties}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                                         style={{ backgroundColor: 'hsl(var(--primary) / 0.1)' }}>
+                                        style={{ backgroundColor: 'hsl(var(--primary) / 0.1)' }}>
                                         <FileText className="w-4 h-4" style={{ color: 'hsl(var(--primary))' }} />
                                     </div>
                                     <div>
@@ -316,15 +318,15 @@ export default function Programs() {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="px-4 py-3 rounded-xl border backdrop-blur-sm"
-                                 style={{
-                                     backgroundColor: 'hsl(var(--card) / 0.8)',
-                                     borderColor: 'hsl(var(--border))',
-                                 } as React.CSSProperties}>
+                                style={{
+                                    backgroundColor: 'hsl(var(--card) / 0.8)',
+                                    borderColor: 'hsl(var(--border))',
+                                } as React.CSSProperties}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                                         style={{ backgroundColor: 'hsl(var(--emerald) / 0.1)' }}>
+                                        style={{ backgroundColor: 'hsl(var(--emerald) / 0.1)' }}>
                                         <CheckCircle className="w-4 h-4" style={{ color: 'hsl(var(--emerald))' }} />
                                     </div>
                                     <div>
@@ -339,7 +341,7 @@ export default function Programs() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="flex gap-3">
                         <motion.button
                             whileHover={{ scale: 1.05 }}
@@ -375,18 +377,18 @@ export default function Programs() {
                     className="relative"
                 >
                     <div className="w-full mx-auto"
-                         style={{ maxWidth: '90%' }}>
+                        style={{ maxWidth: '90%' }}>
                         <div className="bg-gradient-to-r from-card to-card/95 rounded-2xl border shadow-xl p-4"
-                             style={{
-                                 borderColor: 'hsl(var(--border) / 0.5)',
-                                 boxShadow: '0 20px 40px hsl(var(--primary) / 0.05)',
-                             } as React.CSSProperties}>
+                            style={{
+                                borderColor: 'hsl(var(--border) / 0.5)',
+                                boxShadow: '0 20px 40px hsl(var(--primary) / 0.05)',
+                            } as React.CSSProperties}>
                             <div className="flex flex-col md:flex-row gap-4 items-center">
                                 {/* SEARCH BAR */}
                                 <div className="flex-1 relative w-full">
                                     <div className="relative">
                                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5"
-                                                style={{ color: 'hsl(var(--muted-foreground))' }} />
+                                            style={{ color: 'hsl(var(--muted-foreground))' }} />
                                         <input
                                             type="text"
                                             placeholder="Search programs by title, description, or features..."
@@ -423,7 +425,7 @@ export default function Programs() {
 
                                     {/* VIEW TOGGLE */}
                                     <div className="flex rounded-xl border overflow-hidden"
-                                         style={{ borderColor: 'hsl(var(--border))' }}>
+                                        style={{ borderColor: 'hsl(var(--border))' }}>
                                         <button
                                             onClick={() => setViewMode("grid")}
                                             className={`px-4 py-3 transition-all ${viewMode === "grid" ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}
@@ -440,12 +442,12 @@ export default function Programs() {
 
                                     {/* RESULTS COUNT */}
                                     <div className="px-3 py-1.5 rounded-lg border"
-                                         style={{
-                                             backgroundColor: 'hsl(var(--muted))',
-                                             borderColor: 'hsl(var(--border))',
-                                         } as React.CSSProperties}>
+                                        style={{
+                                            backgroundColor: 'hsl(var(--muted))',
+                                            borderColor: 'hsl(var(--border))',
+                                        } as React.CSSProperties}>
                                         <span className="text-sm font-medium"
-                                              style={{ color: 'hsl(var(--muted-foreground))' }}>
+                                            style={{ color: 'hsl(var(--muted-foreground))' }}>
                                             {filteredPrograms.length} results
                                         </span>
                                     </div>
@@ -466,7 +468,7 @@ export default function Programs() {
                                             {/* TYPE FILTER */}
                                             <div>
                                                 <label className="text-sm font-medium mb-2 block"
-                                                       style={{ color: 'hsl(var(--foreground))' }}>
+                                                    style={{ color: 'hsl(var(--foreground))' }}>
                                                     Program Type
                                                 </label>
                                                 <div className="flex gap-2">
@@ -476,8 +478,8 @@ export default function Programs() {
                                                             onClick={() => setFilters({ ...filters, type })}
                                                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filters.type === type ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}
                                                         >
-                                                            {type === "all" ? "All Types" : 
-                                                             type === "main" ? "Main" : "Additional"}
+                                                            {type === "all" ? "All Types" :
+                                                                type === "main" ? "Main" : "Additional"}
                                                         </button>
                                                     ))}
                                                 </div>
@@ -486,7 +488,7 @@ export default function Programs() {
                                             {/* ICON FILTER */}
                                             <div>
                                                 <label className="text-sm font-medium mb-2 block"
-                                                       style={{ color: 'hsl(var(--foreground))' }}>
+                                                    style={{ color: 'hsl(var(--foreground))' }}>
                                                     Icon Filter
                                                 </label>
                                                 <select
@@ -511,7 +513,7 @@ export default function Programs() {
                                             {/* SORT FILTER */}
                                             <div>
                                                 <label className="text-sm font-medium mb-2 block"
-                                                       style={{ color: 'hsl(var(--foreground))' }}>
+                                                    style={{ color: 'hsl(var(--foreground))' }}>
                                                     Sort By
                                                 </label>
                                                 <select
@@ -545,16 +547,127 @@ export default function Programs() {
                             initial="hidden"
                             animate="visible"
                             exit="hidden"
-                            className="w-full mx-auto"
-                            style={{ maxWidth: '90%' }}
+                            className="w-full max-w-4xl mx-auto px-4 py-8"
                         >
-                            <div className="bg-card rounded-2xl border shadow-xl overflow-hidden"
-                                 style={{
-                                     borderColor: editingId ? 'hsl(var(--warning) / 0.3)' : 'hsl(var(--primary) / 0.3)',
-                                     boxShadow: '0 25px 50px hsl(var(--primary) / 0.05)',
-                                 } as React.CSSProperties}>
-                                {/* Form content remains the same as previous version */}
-                                {/* ... (Form content from previous version) ... */}
+                            <div
+                                className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-3xl border shadow-2xl overflow-hidden transition-all duration-500"
+                                style={{
+                                    borderColor: editingId ? 'rgb(245 158 11 / 0.3)' : 'rgb(99 102 241 / 0.3)',
+                                    boxShadow: editingId
+                                        ? '0 20px 25px -5px rgb(245 158 11 / 0.1)'
+                                        : '0 20px 25px -5px rgb(99 102 241 / 0.1)',
+                                }}
+                            >
+                                {/* Header Section */}
+                                <div className={`p-6 border-b flex items-center justify-between ${editingId ? 'bg-amber-50/50' : 'bg-indigo-50/50'}`}>
+                                    <div>
+                                        <h2 className="text-xl font-bold text-slate-800">
+                                            {editingId ? 'Edit Program' : 'Create New Program'}
+                                        </h2>
+                                        <p className="text-sm text-slate-500">Fill in the details below to publish your program.</p>
+                                    </div>
+                                    <div className={`p-3 rounded-full ${editingId ? 'bg-amber-100' : 'bg-indigo-100'}`}>
+                                        {editingId ? <Edit3 className="w-5 h-5 text-amber-600" /> : <Plus className="w-5 h-5 text-indigo-600" />}
+                                    </div>
+                                </div>
+
+                                {/* Form Body */}
+                                <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                                    {/* Left Column: Text Inputs */}
+                                    <div className="space-y-5">
+                                        <div className="group">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Program Title</label>
+                                            <input name="title" value={form.title} onChange={handleChange}
+                                                placeholder="e.g. Advanced Web Development"
+                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50" />
+                                        </div>
+
+                                        <div className="group">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Subtitle</label>
+                                            <input name="subtitle" value={form.subtitle} onChange={handleChange}
+                                                placeholder="A short catchphrase..."
+                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50" />
+                                        </div>
+
+                                        <div className="group">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Program Description</label>
+                                            <textarea name="description" value={form.description} onChange={handleChange}
+                                                placeholder="Tell us more about this program..."
+                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50 min-h-[120px] resize-none" />
+                                        </div>
+                                    </div>
+
+                                    {/* Right Column: Media & Meta */}
+                                    <div className="space-y-5">
+                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Program Thumbnail</label>
+                                        <label className="group relative border-2 border-dashed border-slate-300 rounded-2xl p-4 cursor-pointer hover:border-indigo-500 hover:bg-indigo-50/30 transition-all flex flex-col items-center justify-center min-h-[200px] overflow-hidden">
+                                            {preview ? (
+                                                <>
+                                                    <img src={preview} alt="preview" className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105" />
+                                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                        <span className="text-white text-sm font-medium">Change Image</span>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="text-center">
+                                                    <div className="bg-indigo-100 p-4 rounded-full mb-3 inline-block">
+                                                        <ImageIcon className="w-8 h-8 text-indigo-500" />
+                                                    </div>
+                                                    <span className="block text-sm font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">
+                                                        Click to upload
+                                                    </span>
+                                                    <span className="text-xs text-slate-400">PNG, JPG up to 10MB</span>
+                                                </div>
+                                            )}
+                                            <input type="file" accept="image/*" hidden onChange={handleImageChange} />
+                                        </label>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Icon</label>
+                                                <select name="icon" value={form.icon} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50 appearance-none">
+                                                    {ICONS.map((i: any) => <option key={i.value} value={i.value}>{i.value}</option>)}
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Category</label>
+                                                <select name="type" value={form.type} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50 appearance-none">
+                                                    <option value="main">Main Program</option>
+                                                    <option value="additional">Additional</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Full Width Bottom Input */}
+                                    <div className="md:col-span-2 group">
+                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block ml-1">Features</label>
+                                        <input name="features" value={form.features} onChange={handleChange}
+                                            placeholder="Live Sessions, Certificate, Lifetime Access (separate with commas)"
+                                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none bg-white/50" />
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="md:col-span-2 flex items-center justify-end gap-3 pt-4 border-t mt-2">
+                                        <button
+                                            type="button"
+                                            className="px-6 py-2.5 rounded-xl font-medium text-slate-600 hover:bg-slate-100 transition-colors"
+                                            onClick={() => {/* add cancel logic */ }}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className={`px-8 py-2.5 rounded-xl font-bold text-white shadow-lg transition-all active:scale-95 ${editingId
+                                                    ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-200'
+                                                    : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'
+                                                }`}
+                                        >
+                                            {editingId ? 'Update Program' : 'Publish Program'}
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </motion.div>
                     )}
@@ -570,7 +683,7 @@ export default function Programs() {
                         />
                     </div>
                 ) : filteredPrograms.length === 0 ? (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         className="text-center py-20 rounded-2xl border-2 border-dashed"
@@ -579,8 +692,8 @@ export default function Programs() {
                             backgroundColor: 'hsl(var(--card))',
                         }}
                     >
-                        <Search className="w-16 h-16 mx-auto mb-4 opacity-50" 
-                                style={{ color: 'hsl(var(--muted-foreground))' }} />
+                        <Search className="w-16 h-16 mx-auto mb-4 opacity-50"
+                            style={{ color: 'hsl(var(--muted-foreground))' }} />
                         <h4 className="text-xl font-semibold mb-2"
                             style={{ color: 'hsl(var(--foreground))' }}>
                             No programs found
@@ -601,7 +714,7 @@ export default function Programs() {
                         </button>
                     </motion.div>
                 ) : (
-                    <motion.div 
+                    <motion.div
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
@@ -611,7 +724,7 @@ export default function Programs() {
                         {viewMode === "grid" ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredPrograms.map((program: any, index: number) => (
-                                    <ProgramCard 
+                                    <ProgramCard
                                         key={program._id}
                                         program={program}
                                         index={index}
@@ -623,7 +736,7 @@ export default function Programs() {
                         ) : (
                             <div className="space-y-4">
                                 {filteredPrograms.map((program: any, index: number) => (
-                                    <ProgramRow 
+                                    <ProgramRow
                                         key={program._id}
                                         program={program}
                                         index={index}
@@ -672,7 +785,7 @@ const fadeInUp: Variants = {
 /* ---------------- PROGRAM CARD COMPONENT ---------------- */
 function ProgramCard({ program, index, onEdit, onDelete }: any) {
     const IconComponent = ICONS.find(i => i.value === program.icon)?.icon || Users;
-    
+
     return (
         <motion.div
             variants={itemVariants}
@@ -694,7 +807,7 @@ function ProgramCard({ program, index, onEdit, onDelete }: any) {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                
+
                 {/* BADGES */}
                 <div className="absolute top-4 left-4 flex flex-col gap-2">
                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${program.type === 'main' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
@@ -704,7 +817,7 @@ function ProgramCard({ program, index, onEdit, onDelete }: any) {
                         {program.status || 'Active'}
                     </span>
                 </div>
-                
+
                 {/* ACTION BUTTONS */}
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                     <motion.button
@@ -737,7 +850,7 @@ function ProgramCard({ program, index, onEdit, onDelete }: any) {
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                             style={{ backgroundColor: 'hsl(var(--primary) / 0.1)' }}>
+                            style={{ backgroundColor: 'hsl(var(--primary) / 0.1)' }}>
                             <IconComponent className="w-5 h-5" style={{ color: 'hsl(var(--primary))' }} />
                         </div>
                         <div>
@@ -759,10 +872,10 @@ function ProgramCard({ program, index, onEdit, onDelete }: any) {
                 {program.features?.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-4">
                         {program.features.slice(0, 3).map((feature: string, idx: number) => (
-                            <span 
+                            <span
                                 key={idx}
                                 className="text-xs px-2 py-1 rounded-lg"
-                                style={{ 
+                                style={{
                                     backgroundColor: 'hsl(var(--muted))',
                                     color: 'hsl(var(--muted-foreground))',
                                 }}
@@ -779,7 +892,7 @@ function ProgramCard({ program, index, onEdit, onDelete }: any) {
                 )}
 
                 <div className="flex items-center justify-between pt-4 border-t"
-                     style={{ borderColor: 'hsl(var(--border))' }}>
+                    style={{ borderColor: 'hsl(var(--border))' }}>
                     <div className="text-xs text-muted-foreground">
                         <Clock className="w-3 h-3 inline mr-1" />
                         Updated recently
@@ -802,7 +915,7 @@ function ProgramCard({ program, index, onEdit, onDelete }: any) {
 /* ---------------- PROGRAM ROW COMPONENT ---------------- */
 function ProgramRow({ program, index, onEdit, onDelete }: any) {
     const IconComponent = ICONS.find(i => i.value === program.icon)?.icon || Users;
-    
+
     return (
         <motion.div
             variants={itemVariants}
@@ -830,7 +943,7 @@ function ProgramRow({ program, index, onEdit, onDelete }: any) {
                 <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                             style={{ backgroundColor: 'hsl(var(--primary) / 0.1)' }}>
+                            style={{ backgroundColor: 'hsl(var(--primary) / 0.1)' }}>
                             <IconComponent className="w-5 h-5" style={{ color: 'hsl(var(--primary))' }} />
                         </div>
                         <div>
@@ -843,7 +956,7 @@ function ProgramRow({ program, index, onEdit, onDelete }: any) {
                             </p>
                         </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${program.type === 'main' ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
                             {program.type === 'main' ? 'Main' : 'Additional'}
@@ -861,10 +974,10 @@ function ProgramRow({ program, index, onEdit, onDelete }: any) {
                 {program.features?.length > 0 && (
                     <div className="flex flex-wrap gap-1">
                         {program.features.slice(0, 4).map((feature: string, idx: number) => (
-                            <span 
+                            <span
                                 key={idx}
                                 className="text-xs px-2 py-1 rounded-lg"
-                                style={{ 
+                                style={{
                                     backgroundColor: 'hsl(var(--muted))',
                                     color: 'hsl(var(--muted-foreground))',
                                 }}
@@ -903,7 +1016,7 @@ function ProgramRow({ program, index, onEdit, onDelete }: any) {
                     <Trash2 className="w-4 h-4" style={{ color: 'hsl(var(--destructive))' }} />
                 </motion.button>
                 <button className="p-3 rounded-xl border hover:bg-muted transition-colors"
-                        style={{ borderColor: 'hsl(var(--border))' }}>
+                    style={{ borderColor: 'hsl(var(--border))' }}>
                     <MoreVertical className="w-4 h-4" style={{ color: 'hsl(var(--muted-foreground))' }} />
                 </button>
             </div>

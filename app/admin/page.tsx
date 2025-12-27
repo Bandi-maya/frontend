@@ -17,7 +17,7 @@ export default function Dashboard() {
     const fetchStats = async () => {
       try {
         const [p, o, c] = await Promise.all([
-          apiFetch("/newproducts"),
+          apiFetch("/products"),
           apiFetch("/orders"),
           apiFetch("/categories")
         ]);

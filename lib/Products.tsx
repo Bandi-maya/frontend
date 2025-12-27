@@ -3,7 +3,7 @@ import { apiUrl } from "./constants";
 // lib/products.ts
 export async function fetchProduct(slug: string) {
     try {
-        const res = await fetch(`${apiUrl}/newproducts/slug/${slug}`);
+        const res = await fetch(`${apiUrl}/products/slug/${slug}`);
         console.log(res, 'gfhjkl;', slug)
 
         if (!res.ok) {

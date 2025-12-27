@@ -11,7 +11,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await apiFetch(`/newproducts`);
+                const response = await apiFetch(`/products`);
                 setProducts(response);
             } catch (error) {
                 console.error(error);

@@ -452,7 +452,7 @@ export default function Products() {
   }, []);
 
   const fetchProducts = async () => {
-    const res = await apiFetch("/newproducts");
+    const res = await apiFetch("/products");
     setProducts(res);
   };
 
@@ -619,8 +619,8 @@ export default function Products() {
   };
 
   const handleDelete = async (id: any) => {
-    if (!confirm(t('admin.product.delete_confirm'))) return;
-    await apiFetch(`/newproducts/${id}`, { method: "DELETE" });
+    if (!confirm(('admin.product.delete_confirm'))) return;
+    await apiFetch(`/products/${id}`, { method: "DELETE" });
     setProducts(products.filter((p: any) => p._id !== id));
   };
 
@@ -689,10 +689,10 @@ export default function Products() {
       // --- API request ---
       let res: any;
       if (editingId) {
-        res = await apiFetch(`/newproducts/${editingId}`, { method: "PUT", data });
+        res = await apiFetch(`/products/${editingId}`, { method: "PUT", data });
         setProducts(products.map((p: any) => (p._id === editingId ? res : p)));
       } else {
-        res = await apiFetch("/newproducts", { method: "POST", data });
+        res = await apiFetch("/products", { method: "POST", data });
         setProducts([...products, res]);
       }
 
